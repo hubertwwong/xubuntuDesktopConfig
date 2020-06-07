@@ -3,6 +3,7 @@
     name: code
     state: present
     classic: true
+  become: yes
 
 # failed_when is to bypass grep returning error when not found.
 # https://stackoverflow.com/questions/34340562/evaluating-return-code-in-ansible-conditional

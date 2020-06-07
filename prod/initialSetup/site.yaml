@@ -1,4 +1,4 @@
 - name: Run a single role to test
   hosts: localhost
   roles:
-    - vboxGuest
+    - vscode
