@@ -1,0 +1,17 @@
+- name: Install some basic pacakge useful for the rest of the install process.
+  package:
+    name:
+      - curl
+      - git
+      - gnome-online-accounts 
+      - htop
+      - keepass2
+      - libavcodec-extra 
+      - software-properties-common
+      - synaptic
+      - tmux 
+      - vim
+    state: present
+    update_cache: true
+  become: yes
+    

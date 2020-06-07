@@ -1,0 +1,19 @@
+---
+# Call all other playboosk to setup my setup.
+# Mostly just some ansible pratice.
+- name: Run the other roles
+  hosts: localhost
+  roles:
+    - initialPackages 
+    - gnomeAccounts
+    - gnomeSettings
+    - timezone
+    - dot
+    - chrome
+    - nvm
+    - vboxGuest
+    - python
+    - vscode
+    - git
+    - docker
+    - golang
