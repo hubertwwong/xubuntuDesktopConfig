@@ -13,5 +13,5 @@ Mostly doing this for pratice
 Single command test
 Remove some packages that I don't use to speed some things up.
 ```
-mkdir -p zzz/xubuntuDesktopConfig && cd zzz/xubuntuDesktopConfig && sudo apt update && sudo apt -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt autoclean && sudo apt autoremove && sudo apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && ansible-playbook -v --ask-become-pass prod/initialSetup/site-all.yaml
+mkdir -p zzz/xubuntuDesktopConfig && cd zzz/xubuntuDesktopConfig && sudo apt update && sudo apt -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && ansible-playbook -v --ask-become-pass prod/initialSetup/site-all.yaml
 ```
