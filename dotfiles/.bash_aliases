@@ -110,7 +110,8 @@ alias aaUpgradeSys="sudo apt -y update && sudo apt -y upgrade && sudo apt -y aut
 # Git
 alias ggi="git init"
 alias gga="git add ."
-alias ggc="git commit -m "
+alias ggc="git commit -m"
+alias ggf="git fetch"
 
 # Misc
 alias aaOwnDir="sudo chown -R $USER:$USER ."
