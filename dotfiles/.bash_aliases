@@ -161,51 +161,47 @@ export PATH=$PATH:$HOME/.local/bin:/usr/local/go/bin
 # Kubernetes aliases. assuming monitoring prometheus as the namespace for now
 # ===========================================================================
 
-# namespace
-KUBE_NAMESPACE=default
-
 # General. 
-alias k="kubectl -n "$KUBE_NAMESPACE
+alias k="kubectl"
 
 # get
-alias kgcr="kubectl get ClusterRoles -n "$KUBE_NAMESPACE
-alias kgcrb="kubectl get ClusterRoleBindings -n "$KUBE_NAMESPACE
-alias kgcm="kubectl get ConfigMaps -n "$KUBE_NAMESPACE
-alias kgds="kubectl get DaemonSets -n "$KUBE_NAMESPACE
-alias kgd="kubectl get Deployments -n "$KUBE_NAMESPACE
-alias kgpv="kubectl get pv -n "$KUBE_NAMESPACE
-alias kgpvc="kubectl get pvc -n "$KUBE_NAMESPACE
-alias kgp="kubectl get pods -n "$KUBE_NAMESPACE
-alias kgs="kubectl get services -n "$KUBE_NAMESPACE
-alias kgsa="kubectl get ServiceAccounts -n "$KUBE_NAMESPACE
-alias kgss="kubectl get StatefulSets -n "$KUBE_NAMESPACE
-
+alias kgcr="kubectl get ClusterRoles"
+alias kgcrb="kubectl get ClusterRoleBindings"
+alias kgcm="kubectl get ConfigMaps"
+alias kgds="kubectl get DaemonSets"
+alias kgd="kubectl get Deployments"
+alias kgpv="kubectl get pv"
+alias kgpvc="kubectl get pvc"
+alias kgp="kubectl get pods"
+alias kgs="kubectl get services"
+alias kgsa="kubectl get ServiceAccounts"
+alias kgss="kubectl get StatefulSets"
 
 # describe
-alias kdcr="kubectl describe ClusterRole -n "$KUBE_NAMESPACE
-alias kdcrb="kubectl describe ClusterRoleBinding -n "$KUBE_NAMESPACE
-alias kdcm="kubectl describe ConfigMap -n "$KUBE_NAMESPACE
-alias kdds="kubectl describe DaemonSet -n "$KUBE_NAMESPACE
-alias kdd="kubectl describe Deployment -n "$KUBE_NAMESPACE
-alias kdpv="kubectl describe pv -n "$KUBE_NAMESPACE
-alias kdpvc="kubectl describe pvc -n "$KUBE_NAMESPACE
-alias kdp="kubectl describe pod -n "$KUBE_NAMESPACE
-alias kds="kubectl describe service -n "$KUBE_NAMESPACE
-alias kdsa="kubectl describe ServiceAccount -n "$KUBE_NAMESPACE
-alias kdss="kubectl describe StatefulSetx -n "$KUBE_NAMESPACE
+alias kdcr="kubectl describe ClusterRole"
+alias kdcrb="kubectl describe ClusterRoleBinding"
+alias kdcm="kubectl describe ConfigMap"
+alias kdds="kubectl describe DaemonSet"
+alias kdd="kubectl describe Deployment"
+alias kdpv="kubectl describe pv"
+alias kdpvc="kubectl describe pvc"
+alias kdp="kubectl describe pod"
+alias kds="kubectl describe service"
+alias kdsa="kubectl describe ServiceAccount"
+alias kdss="kubectl describe StatefulSet"
 
 # delete
-alias kxcr="kubectl delete ClusterRole -n "$KUBE_NAMESPACE
-alias kxcrb="kubectl delete ClusterRoleBinding -n "$KUBE_NAMESPACE
-alias kxcm="kubectl delete ConfigMap -n "$KUBE_NAMESPACE
-alias kxds="kubectl delete DaemonSet -n "$KUBE_NAMESPACE
-alias kxd="kubectl delete Deployment -n "$KUBE_NAMESPACE
-alias kxpv="kubectl delete pv -n "$KUBE_NAMESPACE
-alias kxpvc="kubectl delete pvc -n "$KUBE_NAMESPACE
-alias kxp="kubectl delete pod -n "$KUBE_NAMESPACE
-alias kxs="kubectl delete service -n "$KUBE_NAMESPACE
-alias kxsa="kubectl delete ServiceAccount -n "$KUBE_NAMESPACE
-alias kxss="kubectl delete StatefulSetx -n "$KUBE_NAMESPACE
+alias kxcr="kubectl delete ClusterRole"
+alias kxcrb="kubectl delete ClusterRoleBinding"
+alias kxcm="kubectl delete ConfigMap"
+alias kxds="kubectl delete DaemonSet"
+alias kxd="kubectl delete Deployment"
+alias kxpv="kubectl delete pv"
+alias kxpvc="kubectl delete pvc"
+alias kxp="kubectl delete pod"
+alias kxs="kubectl delete service"
+alias kxsa="kubectl delete ServiceAccount"
+alias kxss="kubectl delete StatefulSet"
 
 # log
-alias kl="kubectl logs -n "$KUBE_NAMESPACE" --follow"
+alias kl="kubectl logs --follow"
