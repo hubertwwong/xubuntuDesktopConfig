@@ -112,6 +112,7 @@ alias ggi="git init"
 alias gga="git add ."
 alias ggc="git commit -m"
 alias ggf="git fetch"
+alias ggs="git status"
 
 # Misc
 alias aaOwnDir="sudo chown -R $USER:$USER ."
