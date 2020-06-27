@@ -168,11 +168,8 @@ export PATH=$PATH:$HOME/.local/bin:/usr/local/go/bin
 # Kubernetes aliases. assuming monitoring prometheus as the namespace for now
 # ===========================================================================
 
-# namespace
-KUBE_NAMESPACE=default
-
 # General. 
-alias k="kubectl
+alias k="kubectl"
 
 # config
 alias kcgc="kubectl config get-contexts"
@@ -220,4 +217,4 @@ alias kxsa="kubectl delete ServiceAccount"
 alias kxss="kubectl delete StatefulSet"
 
 # log
-alias kl="kubectl logs" --follow"
+alias kl="kubectl logs --follow"
