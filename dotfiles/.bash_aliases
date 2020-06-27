@@ -48,6 +48,10 @@ parse_git_branch() {
   git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* //'
 }
 
+kube_get_context() {
+  kubectl config current-context
+}
+
 # Save the default prompt if you want to go back to it.
 DEFAULT_PROMPT=$PS1
 alias aaPromptDefault="PS1=$DEFAULT_PROMPT"
@@ -55,8 +59,9 @@ alias aaPromptDefault="PS1=$DEFAULT_PROMPT"
 # Custom Prompt
 CUST1_PROMPT="[\u][\w][\@]\n$ "
 CUST2_PROMPT="$RST[$FBLE\u$RST][$FBLE\w$RST][$FBLE\D{%r}$RST][$FBLE\$(parse_git_branch)$RST]\n$ "
+KUBE_PROMPT="$RST[$FBLE\u$RST][$FBLE\w$RST][$FBLE\D{%r}$RST][$FBLE\$(parse_git_branch)$RST][$FBLE\$(kube_get_context)$RST]\n$ "
 CUST_NONAME_PROMPT="$RST[$FBLE\w$RST][$FBLE\@$RST]\n$ "
-PS1=$CUST2_PROMPT
+PS1=$KUBE_PROMPT
 
 # Functions
 ##############################################################################
@@ -163,8 +168,17 @@ export PATH=$PATH:$HOME/.local/bin:/usr/local/go/bin
 # Kubernetes aliases. assuming monitoring prometheus as the namespace for now
 # ===========================================================================
 
+# namespace
+KUBE_NAMESPACE=default
+
 # General. 
-alias k="kubectl"
+alias k="kubectl
+
+# config
+alias kcgc="kubectl config get-contexts"
+alias kcuc="kubectl config use-context"
+alias kccc="kubectl config current-context"
+alias kcgcl="kubectl config get-clusters"
 
 # get
 alias kgcr="kubectl get ClusterRoles"
@@ -206,4 +220,4 @@ alias kxsa="kubectl delete ServiceAccount"
 alias kxss="kubectl delete StatefulSet"
 
 # log
-alias kl="kubectl logs --follow"
+alias kl="kubectl logs" --follow"
