@@ -20,7 +20,18 @@ General install.
 mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig && sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-all.yaml
 ```
 
-General install with a vm guest. This assumes you are running from the directory of the that contains the VBoxLinuxAdditions.run command. The `|| true` is to swallow the error that `./VBoxLinuxAdditions.run` might throw and continue the script.
+General install with a vm guest. 
+
+1. This assumes you are running from the directory of the that contains the VBoxLinuxAdditions.run command. 
+2. The `|| true` is to swallow the error that `./VBoxLinuxAdditions.run` might throw and continue the script.
+3. You have to mount the guest additions from the GUI. 
+
+Mount CD instructions:
+1. Click Devices from menu.
+2. Install Guest Additions CD Image
+3. Double click the CD icon to mount CD with guest additions.
+4. Right click in window and open a terminal here.
+5. Paste the following.
 
 ```
 sudo sh -c ./VBoxLinuxAdditions.run || true && mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig && sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-all.yaml
