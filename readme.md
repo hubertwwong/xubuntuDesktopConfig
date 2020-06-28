@@ -26,7 +26,7 @@ General install with a vm guest. This assumes you are running from the directory
 sudo ./VBoxLinuxAdditions.run && mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig && sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-all.yaml
 ```
 
-If you wnat to run a specific playbook, just modify site.yaml and change it to the playbook you want to run.
+If you want to run a specific playbook, just modify site.yaml and change it to the playbook you want to run.
 ```
 ansible-playbook -v --ask-become-pass prod/initialSetup/site.yaml
 ```
