@@ -31,6 +31,7 @@
     mode: 0775
   with_items:
     - /etc/systemd/system/resilio-sync.service.d
+  become: yes
 
 - name: Copy config to service directory
   template:
