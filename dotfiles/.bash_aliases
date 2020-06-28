@@ -61,7 +61,7 @@ CUST1_PROMPT="[\u][\w][\@]\n$ "
 CUST2_PROMPT="$RST[$FBLE\u$RST][$FBLE\w$RST][$FBLE\D{%r}$RST][$FBLE\$(parse_git_branch)$RST]\n$ "
 KUBE_PROMPT="$RST[$FBLE\u$RST][$FBLE\w$RST][$FBLE\D{%r}$RST][$FBLE\$(parse_git_branch)$RST][$FBLE\$(kube_get_context)$RST]\n$ "
 CUST_NONAME_PROMPT="$RST[$FBLE\w$RST][$FBLE\@$RST]\n$ "
-PS1=$KUBE_PROMPT
+PS1=$CUST2_PROMPT
 
 # Functions
 ##############################################################################

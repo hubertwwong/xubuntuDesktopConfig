@@ -16,6 +16,7 @@
     name:
       - software-properties-common
       - resilio-sync
+    state: present
   become: yes
 
 - name: Run Resilio script initialization. Creates a default configuration that you will modify.
@@ -30,13 +31,16 @@
 - name: just force systemd to reread configs (2.4 and above)
   systemd:
     daemon_reload: yes
+  become: yes
 
 - name: Enable service resilio and ensure it is not masked
   systemd:
     name: resilio-sync
     enabled: yes
+  become: yes
 
 - name: Reload service resilio-sync, in all cases
   systemd:
     name: resilio-sync
-    state: reloaded
+    state: restarted
+  become: yes
