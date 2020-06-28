@@ -24,7 +24,7 @@ General install with a vm guest.
 
 1. This assumes you are running from the directory of the that contains the VBoxLinuxAdditions.run command. 
 2. The `|| true` is to swallow the error that `./VBoxLinuxAdditions.run` might throw and continue the script.
-3. You have to mount the guest additions from the GUI. 
+3. You have to mount the guest additions from the GUI. TODO. Make this automated too. Not sure how. I think its just an Oracle thing where there isn't a repo tha contains this file.
 
 Mount CD instructions:
 1. Click Devices from menu.
