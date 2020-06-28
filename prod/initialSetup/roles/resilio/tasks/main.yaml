@@ -22,6 +22,16 @@
 - name: Run Resilio script initialization. Creates a default configuration that you will modify.
   shell: /etc/resilio-sync/init_user_config.sh
 
+- name: Create directory /etc/systemd/system/resilio-sync.service.d
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - /etc/systemd/system/resilio-sync.service.d
+
 - name: Copy config to service directory
   template:
     src: resilio.conf.j2
