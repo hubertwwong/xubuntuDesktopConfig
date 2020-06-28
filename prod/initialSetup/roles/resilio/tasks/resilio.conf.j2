@@ -1,6 +1,6 @@
 [Service]
-User=$USER
-Group=$USER
+User={{ansible_env.USER}}
+Group={{ansible_env.USER}}
 PIDFile=/home/{{ansible_env.USER}}/.config/resilio-sync/sync.pid
 ExecStartPre=
 ExecStart=
