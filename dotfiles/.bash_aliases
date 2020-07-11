@@ -165,10 +165,10 @@ export PATH=$PATH:$HOME/.local/bin:/usr/local/go/bin
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Kubernetes aliases. assuming monitoring prometheus as the namespace for now
-# ===========================================================================
+# Kubernetes aliases
+##############################################################################
 
-# General. 
+# command 
 alias k="kubectl"
 
 # config
@@ -218,3 +218,15 @@ alias kxss="kubectl delete StatefulSet"
 
 # log
 alias kl="kubectl logs --follow"
+
+# minikube
+##############################################################################
+
+# command
+alias mk="minikube"
+
+# general
+alias mkd="minikube dashboard"
+alias mkse="minikube service"
+alias mkst="minikube start"
+alias mkde="minikube delete"

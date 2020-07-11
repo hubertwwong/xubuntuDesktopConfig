@@ -19,4 +19,5 @@
     - golang
     - kubectl
     - minikube
+    - helm
     - resilio
