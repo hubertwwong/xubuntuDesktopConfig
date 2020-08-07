@@ -1,11 +1,15 @@
 
-- name: Add flatpak repo. You don't need this on 18.10+
-  apt_repository:
-    repo: "deb http://ppa.launchpad.net/alexlarsson/flatpak/ubuntu bionic main"
-    state: present
-    update_cache: yes
+# - name: Add flatpak repo. You don't need this on 18.10+
+#   apt_repository:
+#     repo: "deb http://ppa.launchpad.net/alexlarsson/flatpak/ubuntu bionic main"
+#     state: present
+#     update_cache: yes
+#   become: yes
+#   allow_unauthenticated: yes
+
+- name: Add flatpak repo using shell. Weirdness using apt_repository. You don't need this on 18.10+
+  shell: sudo add-apt-repository ppa:alexlarsson/flatpak -y
   become: yes
-  allow_unauthenticated: yes
 
 - name: Install flatpak and Gnome plugin
   package:
