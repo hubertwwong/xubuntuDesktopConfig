@@ -1,0 +1,20 @@
+
+- name: Add flatpak repo. You don't need this on 18.10+
+  apt_repository:
+    repo: "deb http://ppa.launchpad.net/alexlarsson/flatpak/ubuntu bionic main"
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Install flatpak and Gnome plugin
+  package:
+    name:
+    - flatpak
+    - gnome-software-plugin-flatpak
+    state: present
+  become: yes
+
+
+- name: Add flathub repo
+  shell: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+  become: yes

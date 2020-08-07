@@ -14,7 +14,7 @@
 - name: Install helm
   package:
     name:
-      -  apt-transport-https
+      - apt-transport-https
       - helm
     state: present
   become: yes
