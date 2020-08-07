@@ -50,8 +50,12 @@ sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && su
 
 Flatpak version. Should have more compatibility.
 ```
-sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && sudo snap install --classic code && sudo sh -c ./VBoxLinuxAdditions.run || true && mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig  && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-flatpak.yaml
+sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && sudo snap install --classic code && sudo sh -c ./VBoxLinuxAdditions.run || true && mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig  && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-flatpak.yaml && cd /media/hubert/~/ &&
+```
 
+Flatpak version. Testing
+```
+sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig  && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-flatpak.yaml && cd /media/hubert/~/ && sudo sh -c ./VBoxLinuxAdditions.run || true
 ```
 
 If you want to run a specific playbook, just modify site.yaml and change it to the playbook you want to run.
