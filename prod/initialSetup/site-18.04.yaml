@@ -5,7 +5,6 @@
   hosts: localhost
   roles:
     - initialPackages
-    - flatpak 
     - gnomeAccounts
     - gnomeSettings
     - timezone
@@ -21,4 +20,3 @@
     - minikube
     - helm
     - resilio
-    - flatpakVSCode
