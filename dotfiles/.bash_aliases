@@ -222,6 +222,7 @@ alias kl="kubectl logs --follow"
 
 # unsorted
 alias kgn="kubectl get namespaces"
+alias ka="kubectl apply -f"
 
 # minikube
 ##############################################################################
