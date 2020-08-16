@@ -108,6 +108,7 @@ alias aaAptInstall="sudo apt -y update && sudo apt -y install"
 # System update.
 # Snaps refresh automatically. don't put it here.
 alias aaUpgradeSys="sudo apt -y update && sudo apt -y upgrade && sudo apt -y autoremove && sudo apt -y autoclean"
+alias aaSourceBashrc="source ~/.bashrc"
 
 # Init this file.
 # alias aaUpdateBash="cp $ZZ_SCRIPTS_DIR/.bash_aliases ~/;source .bashrc"
@@ -218,6 +219,9 @@ alias kxss="kubectl delete StatefulSet"
 
 # log
 alias kl="kubectl logs --follow"
+
+# unsorted
+alias kgn="kubectl get namespaces"
 
 # minikube
 ##############################################################################
