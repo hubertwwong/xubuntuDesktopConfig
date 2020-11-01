@@ -1,0 +1,3 @@
+- name: Updates the VBoxGuest additions. Assumes that VirtualBox cd is mounted.
+  shell: /media/{{ ansible_user }}/V*/VBoxLinuxAdditions.run
+  become: yes
