@@ -235,3 +235,8 @@ alias mkd="minikube dashboard"
 alias mkse="minikube service"
 alias mkst="minikube start"
 alias mkde="minikube delete"
+
+# virtualbox
+##############################################################################
+# Install the guest. Assumes 1 media directory and 1 user.
+alias aaGuestInstall="sudo /media/*/*/VBoxLinuxAdditions.run"
