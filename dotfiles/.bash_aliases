@@ -126,7 +126,8 @@ alias aaOwnDir="sudo chown -R $USER:$USER ."
 # Free space shortcuts
 alias aaFree2="du -h --max-depth=2 | sort -n"
 alias aaFree1="du -h --max-depth=1 | sort -n"
-
+alias aaClean="yarn cache clean; docker system prune -a -f;"
+# Probably a cron is better.
 
 # Install
 #########
