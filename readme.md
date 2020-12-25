@@ -32,7 +32,7 @@ export SCRIPT_DIR=~/zzz && mkdir -p $SCRIPT_DIR && sudo apt update && sudo apt-g
 
 testing 2
 ```
-export SCRIPT_DIR=~/zzz && mkdir -p $SCRIPT_DIR && sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" && cd $SCRIPT_DIR/xubuntuDesktopConfig && git pull && ansible-playbook -v --ask-become-pass prod/initialSetup/site-all-test01.yaml
+export SCRIPT_DIR=~/zzz && mkdir -p $SCRIPT_DIR && sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" && cd $SCRIPT_DIR && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git && cd xubuntuDesktopConfig && git pull && ansible-playbook -v --ask-become-pass prod/initialSetup/site-all-test01.yaml
 ```
 
 
