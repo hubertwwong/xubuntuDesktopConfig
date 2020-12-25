@@ -5,7 +5,6 @@
   hosts: localhost
   roles:
     - initialPackages
-    - vboxGuestActual
     - gnomeAccounts
     - gnomeSettings
     - timezone
@@ -21,3 +20,4 @@
     - minikube
     - helm
     - resilio
+    - vboxGuestActual
