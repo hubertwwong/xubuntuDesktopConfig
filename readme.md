@@ -35,6 +35,12 @@ testing 2
 export SCRIPT_DIR=~/zzz && mkdir -p $SCRIPT_DIR && sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" && cd $SCRIPT_DIR/xubuntuDesktopConfig && git pull && ansible-playbook -v --ask-become-pass prod/initialSetup/site-all-test01.yaml
 ```
 
+testing without ansible snap
+```
+export SCRIPT_DIR=~/zzz && mkdir -p $SCRIPT_DIR && sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove  && sudo snap install --classic code && sudo apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass $SCRIPT_DIR/xubuntuDesktopConfig/prod/initialSetup/site-all-test01.yaml
+
+```
+
 
 General install with a vm guest. 
 
