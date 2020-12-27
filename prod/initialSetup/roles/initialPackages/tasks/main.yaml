@@ -2,7 +2,6 @@
   package:
     name:
       - curl
-      - fonts-noto
       - git
       - gnome-online-accounts 
       - htop
