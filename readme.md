@@ -37,8 +37,7 @@ export SCRIPT_DIR=~/zzz && sudo apt update && sudo apt-get -y remove --purge lib
 
 testing without ansible snap
 ```
-export SCRIPT_DIR=~/zzz && sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove  && sudo snap install --classic code && sudo apt -y install ansible git && && mkdir -p $SCRIPT_DIR && cd $SCRIPT_DIR && rm -rf xubuntuDesktopConfig && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git && cd xubuntuDesktopConfig && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass $SCRIPT_DIR/xubuntuDesktopConfig/prod/initialSetup/site-all-test01-18-04.yaml
-
+export SCRIPT_DIR=~/zzz && sudo apt update && sudo apt-get -y remove --purge libreoffice* thunderbird && sudo apt -y upgrade && sudo apt -y autoclean && sudo apt -y autoremove && sudo snap install --classic code && sudo apt -y install ansible git && mkdir -p $SCRIPT_DIR && cd $SCRIPT_DIR && rm -rf xubuntuDesktopConfig && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git && cd xubuntuDesktopConfig && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-all-test01-18-04.yaml
 ```
 
 
