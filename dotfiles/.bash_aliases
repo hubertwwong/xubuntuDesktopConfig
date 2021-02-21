@@ -241,3 +241,9 @@ alias mkde="minikube delete"
 ##############################################################################
 # Install the guest. Assumes 1 media directory and 1 user.
 alias aaGuestInstall="sudo /media/*/*/VBoxLinuxAdditions.run"
+
+# python
+##############################################################################
+
+# Poetry. Assumes its installed.
+source $HOME/.poetry/env
