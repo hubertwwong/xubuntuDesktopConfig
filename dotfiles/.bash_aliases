@@ -171,7 +171,7 @@ export PATH=$PATH:$HOME/.local/bin:/usr/local/go/bin
 # Base assumption. This is using the ubuntu install of jdk and maven
 
 # JAVA HOME required for maven
-export JAVA_HOME=/usr/lib/openjdk-11
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
 # Node
 ######
