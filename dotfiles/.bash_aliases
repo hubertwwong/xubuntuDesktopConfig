@@ -107,6 +107,7 @@ alias aaAptInstall="sudo apt -y update && sudo apt -y install"
 
 # System update.
 # Snaps refresh automatically. don't put it here.
+alias aaInstallVMGuest="sudo bash /media/$USER/V*/VBoxLinuxAdditions.run"
 alias aaUpgradeSys="sudo apt -y update && sudo apt -y upgrade && sudo apt -y autoremove && sudo apt -y autoclean"
 alias aaSourceBashrc="source ~/.bashrc"
 
