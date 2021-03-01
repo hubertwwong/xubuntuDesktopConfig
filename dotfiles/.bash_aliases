@@ -145,28 +145,52 @@ alias aaClean="yarn cache clean; docker system prune -a -f;"
 #alias aaInstallChrome='wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && sudo dpkg -i google-chrome-stable_current_amd64.deb'
 #alias aaInstallAll="aaInstallBasic && aaInstallDocker && aaInstallVSCode && aaInstallI3 && aaInstallSync && aaInstallChrome"
 
-# Node scripts
-##############
-#alias aaNodeCleanNPM="find . -name "node_modules" -type d -prune -exec rm -rf '{}' +"
-alias aaNodeCleanNPM="sudo find . -name "node_modules" -type d -prune -exec rm -rf '{}' +"
-# BE CAREFUL WITH THIS COMMAND
+# Shell helpers
+##############################################################################
+
 
 # TMUX
 #######
 # [[ $TERM != "screen" ]] && exec tmux
 
-# PATH
-######
+
+# Programming Langs
+##############################################################################
+ 
+# Golang
+########
+
+# Path for golang binary
 export PATH=$PATH:$HOME/.local/bin:/usr/local/go/bin
 # local/bin is for python pip
 # /usr/local/go/bin is for golang
 
-# NVM
+# Java
+######
+
+# Base assumption. This is using the ubuntu install of jdk and maven
+
+# JAVA HOME required for maven
+alias JAVA_HOME=/usr/lib/openjdk-11
+
+# Node
+######
+
+#alias aaNodeCleanNPM="find . -name "node_modules" -type d -prune -exec rm -rf '{}' +"
+alias aaNodeCleanNPM="sudo find . -name "node_modules" -type d -prune -exec rm -rf '{}' +"
+# BE CAREFUL WITH THIS COMMAND
+
 # Note: You probably don't need this but I put this for reference.
 # When you install nvm, it should put these lines in the bashrc file for you.
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 #[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Python
+########
+# Poetry. Assumes its installed.
+source $HOME/.poetry/env
+
 
 # Kubernetes aliases
 ##############################################################################
@@ -184,6 +208,7 @@ alias kcgcl="kubectl config get-clusters"
 alias kgcr="kubectl get ClusterRoles"
 alias kgcrb="kubectl get ClusterRoleBindings"
 alias kgcm="kubectl get ConfigMaps"
+alias kgcj="kubectl get Cronjob"
 alias kgds="kubectl get DaemonSets"
 alias kgd="kubectl get Deployments"
 alias kgpv="kubectl get pv"
@@ -197,6 +222,7 @@ alias kgss="kubectl get StatefulSets"
 alias kdcr="kubectl describe ClusterRole"
 alias kdcrb="kubectl describe ClusterRoleBinding"
 alias kdcm="kubectl describe ConfigMap"
+alias kdcj="kubectl describe Cronjob"
 alias kdds="kubectl describe DaemonSet"
 alias kdd="kubectl describe Deployment"
 alias kdpv="kubectl describe pv"
@@ -210,6 +236,7 @@ alias kdss="kubectl describe StatefulSet"
 alias kxcr="kubectl delete ClusterRole"
 alias kxcrb="kubectl delete ClusterRoleBinding"
 alias kxcm="kubectl delete ConfigMap"
+alias kxcj="kubectl delete Cronjob"
 alias kxds="kubectl delete DaemonSet"
 alias kxd="kubectl delete Deployment"
 alias kxpv="kubectl delete pv"
@@ -242,9 +269,3 @@ alias mkde="minikube delete"
 ##############################################################################
 # Install the guest. Assumes 1 media directory and 1 user.
 alias aaGuestInstall="sudo /media/*/*/VBoxLinuxAdditions.run"
-
-# python
-##############################################################################
-
-# Poetry. Assumes its installed.
-source $HOME/.poetry/env
