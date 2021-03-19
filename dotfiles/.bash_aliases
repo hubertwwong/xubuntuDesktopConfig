@@ -7,7 +7,7 @@ echo "> .bash_aliases"
 # MUST CHANGE
 # You want to set these per machine.
 ZZ_SYNC_DIR="/home/hubert/zzz/sync/vagrant"
-ZZ_SCRIPTS_DIR="$ZZ_SYNC_DIR/ubuntu/scripts/ubuntuDesktopConfig/dotfiles"
+ZZ_SCRIPTS_DIR="~/zzz/xubuntuDesktopConfig"
 #source scripts_env.sh
 
 # Other directories.
@@ -94,11 +94,18 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 
+# Edit aliases
+alias aaEditAliases="code $ZZ_SCRIPTS_DIR/dotfiles"
+
 # Paths
 alias aaGoDocker="cd $ZZ_SYNC_DIR/docker"
 alias aaGoStudy="cd $ZZ_SYNC_DIR/study"
+alias aaGoNotes="cd $ZZ_SYNC_DIR/study"
 alias aaGoScripts="cd $ZZ_SCRIPTS_DIR"
 alias aaGoSync="cd $ZZ_SYNC_DIR"
+
+# USB download directory for ubuntu.
+alias aaGoUSBDownload="cd /media/*/*/downloads"
 
 # Scripts
 
@@ -109,6 +116,7 @@ alias aaAptInstall="sudo apt -y update && sudo apt -y install"
 # Snaps refresh automatically. don't put it here.
 alias aaInstallVMGuest="sudo bash /media/$USER/V*/VBoxLinuxAdditions.run"
 alias aaUpgradeSys="sudo apt -y update && sudo apt -y upgrade && sudo apt -y autoremove && sudo apt -y autoclean"
+alias aaUpgradeAll="sudo apt -y update && sudo apt -y upgrade && sudo apt -y autoremove && sudo apt -y autoclean"
 alias aaSourceBashrc="source ~/.bashrc"
 
 # Init this file.
@@ -190,6 +198,8 @@ alias aaNodeCleanNPM="sudo find . -name "node_modules" -type d -prune -exec rm -
 ########
 # Poetry. Assumes its installed.
 source $HOME/.poetry/env
+# set set python to python 3...
+alias python="python3"
 
 
 # Kubernetes aliases
