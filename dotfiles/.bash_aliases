@@ -196,8 +196,8 @@ alias aaNodeCleanNPM="sudo find . -name "node_modules" -type d -prune -exec rm -
 
 # Python
 ########
-# Poetry. Assumes its installed.
-source $HOME/.poetry/env
+# Poetry. Assumes its installed. First part if
+[ -d "$HOME/.poetry/env" ] && source $HOME/.poetry/env
 # set set python to python 3...
 alias python="python3"
 
