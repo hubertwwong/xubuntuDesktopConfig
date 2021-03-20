@@ -1,16 +1,16 @@
-- find:
-    paths:
-      - "/media/{{ ansible_user }}"
-    patterns:
-      - "VBoxLinuxAdditions.run"
-  register: file_details
+# - find:
+#     paths:
+#       - "/media/{{ ansible_user }}"
+#     patterns:
+#       - "VBoxLinuxAdditions.run*"
+#   register: file_details
 
-- name: Check if file exist. Register it to file_details.
-  stat:
-    path: /media/{{ ansible_user }}/V*/VBoxLinuxAdditions.run
-  register: file_details
+# - name: Check if file exist. Register it to file_details.
+#   stat:
+#     path: /media/{{ ansible_user }}/V*/VBoxLinuxAdditions.run
+#   register: file_details
 
+# Note. There is a terminal window that pops up that prevents this from being automated.
 - name: Updates the VBoxGuest additions. Uses file details check if file exist before executing.
   shell: /media/{{ ansible_user }}/V*/VBoxLinuxAdditions.run
   become: yes
-  when: file_details
