@@ -273,7 +273,7 @@ alias mkde="minikube delete"
 # Update scripts
 ##############################################################################
 
-alias aaInstallVMGuest="sudo bash /media/$USER/V*/VBoxLinuxAdditions.run"
+alias aaInstallVMGuest="sudo bash /media/$USER/V*/VBoxLinuxAdditions.run --nox11"
 alias aaUpgradeSys="sudo apt -y update && sudo apt -y upgrade && sudo apt -y autoremove && sudo apt -y autoclean"
 alias aaUpgradeAll="ansible-playbook -v --ask-become-pass $ZZ_SCRIPTS_DIR/prod/initialSetup/site-all.yaml"
 alias aaSourceBashrc="source ~/.bashrc"
