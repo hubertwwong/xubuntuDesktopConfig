@@ -1,3 +1,9 @@
-- name: Updates the VBoxGuest additions. Assumes that VirtualBox cd is mounted.
+- name: Check if file exist. Register it to file_details.
+  stat:
+    path: /media/{{ ansible_user }}/V*/VBoxLinuxAdditions.run
+  register: file_details
+
+- name: Updates the VBoxGuest additions. Uses file details check if file exist before executing.
   shell: /media/{{ ansible_user }}/V*/VBoxLinuxAdditions.run
   become: yes
+  when: file_details.stat.exists
