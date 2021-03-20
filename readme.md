@@ -17,12 +17,12 @@ Mostly doing this for pratice
 General install
 
 ```
-export SUDO_PASS=password && rm -rf ~/zzz/xubuntuDesktopConfig && mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig && echo $SUDO_PASS | sudo apt update && echo $SUDO_PASS | sudo apt-get -y remove --purge libreoffice* thunderbird && echo $SUDO_PASS | sudo apt -y upgrade && echo $SUDO_PASS | sudo apt -y autoclean && echo $SUDO_PASS | sudo apt -y autoremove && echo $SUDO_PASS | sudo apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-all.yaml --extra-vars "ansible_become_pass=$SUDO_PASS"
+export SUDO_PASS=password && rm -rf ~/zzz/xubuntuDesktopConfig && mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig && echo $SUDO_PASS | sudo -S apt update && echo $SUDO_PASS | sudo -S apt-get -y remove --purge libreoffice* thunderbird && echo $SUDO_PASS | sudo -S apt -y upgrade && echo $SUDO_PASS | sudo -S apt -y autoclean && echo $SUDO_PASS | sudo -S apt -y autoremove && echo $SUDO_PASS | sudo -S apt -y install ansible git && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-all.yaml --extra-vars "ansible_become_pass=$SUDO_PASS"
 ```
 
 General install with 18.04
 ```
-export SUDO_PASS=password && rm -rf ~/zzz/xubuntuDesktopConfig && mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig && echo $SUDO_PASS | sudo apt update && echo $SUDO_PASS | sudo apt-get -y remove --purge libreoffice* thunderbird && echo $SUDO_PASS | sudo apt -y upgrade && echo $SUDO_PASS | sudo apt -y autoclean && echo $SUDO_PASS | sudo apt -y autoremove && echo $SUDO_PASS | sudo apt -y install ansible git && echo $SUDO_PASS | sudo snap install --classic vscode && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-18.04.yaml --extra-vars "ansible_become_pass=$SUDO_PASS""
+export SUDO_PASS=password && rm -rf ~/zzz/xubuntuDesktopConfig && mkdir -p ~/zzz/xubuntuDesktopConfig && cd ~/zzz/xubuntuDesktopConfig && echo $SUDO_PASS | sudo -S apt update && echo $SUDO_PASS | sudo -S apt-get -y remove --purge libreoffice* thunderbird && echo $SUDO_PASS | sudo -S apt -y upgrade && echo $SUDO_PASS | sudo -S apt -y autoclean && echo $SUDO_PASS | sudo -S apt -y autoremove && echo $SUDO_PASS | sudo -S apt -y install ansible git && echo $SUDO_PASS | sudo -S snap install --classic vscode && git clone https://github.com/hubertwwong/xubuntuDesktopConfig.git . && GIT_NAME="Hubert Wong" GIT_EMAIL="foo@bar.com" ansible-playbook -v --ask-become-pass prod/initialSetup/site-18.04.yaml --extra-vars "ansible_become_pass=$SUDO_PASS""
 ```
 
 Testing
