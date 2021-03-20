@@ -12,6 +12,7 @@
     - chrome
     - nvm
     - vboxGuest
+    - vboxGuestActual
     - python
     - vscode
     - git

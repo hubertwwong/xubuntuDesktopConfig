@@ -15,6 +15,7 @@ ZZ_SCRIPTS_DIR="~/zzz/xubuntuDesktopConfig"
 # Other ENV
 ##############################################################################
 export GPODDER_DOWNLOAD_DIR=$ZZ_SYNC_DIR/../podcasts
+export email="hubertwwong@gmail.com"
 
 # Color schemes constants
 ##############################################################################
@@ -87,6 +88,7 @@ docker-ip() {
 ##############################################################################
 
 # LS
+####
 alias l2="ls -alF"
 alias la="ls -A"
 alias ld="ls -ld */"   # List in long format, only directories
@@ -111,13 +113,6 @@ alias aaGoUSBDownload="cd /media/*/*/downloads"
 
 # Simple helper reduce typing
 alias aaAptInstall="sudo apt -y update && sudo apt -y install"
-
-# System update.
-# Snaps refresh automatically. don't put it here.
-alias aaInstallVMGuest="sudo bash /media/$USER/V*/VBoxLinuxAdditions.run"
-alias aaUpgradeSys="sudo apt -y update && sudo apt -y upgrade && sudo apt -y autoremove && sudo apt -y autoclean"
-alias aaUpgradeAll="sudo apt -y update && sudo apt -y upgrade && sudo apt -y autoremove && sudo apt -y autoclean"
-alias aaSourceBashrc="source ~/.bashrc"
 
 # Init this file.
 # alias aaUpdateBash="cp $ZZ_SCRIPTS_DIR/.bash_aliases ~/;source .bashrc"
@@ -199,8 +194,8 @@ alias aaNodeCleanNPM="sudo find . -name "node_modules" -type d -prune -exec rm -
 # Poetry. Assumes its installed. First part if
 [ -d "$HOME/.poetry/env" ] && source $HOME/.poetry/env
 # set set python to python 3...
-alias python="python3"
-
+# NOTE: ansible has a ln command. Not required.
+# alias python="python3"
 
 # Kubernetes aliases
 ##############################################################################
@@ -275,7 +270,10 @@ alias mkse="minikube service"
 alias mkst="minikube start"
 alias mkde="minikube delete"
 
-# virtualbox
+# Update scripts
 ##############################################################################
-# Install the guest. Assumes 1 media directory and 1 user.
-alias aaGuestInstall="sudo /media/*/*/VBoxLinuxAdditions.run"
+
+alias aaInstallVMGuest="sudo bash /media/$USER/V*/VBoxLinuxAdditions.run"
+alias aaUpgradeSys="sudo apt -y update && sudo apt -y upgrade && sudo apt -y autoremove && sudo apt -y autoclean"
+alias aaUpgradeAll="ansible-playbook -v --ask-become-pass $ZZ_SCRIPTS_DIR/prod/initialSetup/site-all.yaml"
+alias aaSourceBashrc="source ~/.bashrc"
