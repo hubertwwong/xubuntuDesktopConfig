@@ -72,3 +72,10 @@ ansible-playbook -v --ask-become-pass prod/initialSetup/site.yaml
 ## Notes
 
 1. `apt-get` needed for for the remove commands.
+
+## TODO
+
+1. More secure version...
+2. Some script cleanup.
+3. Add some logic to check before doing downloads
+4. Some note about putting a symlink on python with python3.

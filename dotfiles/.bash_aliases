@@ -98,6 +98,11 @@ alias ....="cd ../../.."
 
 # Edit aliases
 alias aaEditAliases="code $ZZ_SCRIPTS_DIR/dotfiles"
+alias aaEditScripts="code $ZZ_SCRIPTS_DIR/scripts"
+
+# Bash scripts are stored in bin directory allow them to execute from any where as long as its in the path.
+export PATH=$PATH:$ZZ_SCRIPTS_DIR/bin
+alias aaChmodXScripts="chmod +x $ZZ_SCRIPTS_DIR/bin/*"
 
 # Paths
 alias aaGoDocker="cd $ZZ_SYNC_DIR/docker"
