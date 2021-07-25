@@ -269,6 +269,9 @@ alias ka="kubectl apply -f"
 # command
 alias mk="minikube"
 
+# upgrade to the latest
+alias mkupgrade="sudo rm -rf /usr/local/bin/minikube && sudo curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && sudo chmod +x minikube && sudo cp minikube /usr/local/bin/ && sudo rm minikube"
+
 # general
 alias mkd="minikube dashboard"
 alias mkse="minikube service"
