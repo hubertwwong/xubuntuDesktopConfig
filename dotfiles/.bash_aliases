@@ -268,9 +268,11 @@ alias ka="kubectl apply -f"
 
 # command
 alias mk="minikube"
+alias mkStart="minikube start --memory=4g && minikube addons enable ingress && minikube addons enable dashboard && minikube addons enable metrics-server"
+alias mkRestart="minikube delete && mkStart"
 
 # upgrade to the latest
-alias mkupgrade="sudo rm -rf /usr/local/bin/minikube && sudo curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && sudo chmod +x minikube && sudo cp minikube /usr/local/bin/ && sudo rm minikube"
+alias mkUpgrade="sudo rm -rf /usr/local/bin/minikube && sudo curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && sudo chmod +x minikube && sudo cp minikube /usr/local/bin/ && sudo rm minikube"
 
 # general
 alias mkd="minikube dashboard"
