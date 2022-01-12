@@ -10,13 +10,12 @@
     - timezone
     - dot
     - chrome
-    - nvm
+    - python
     - vboxGuest
     - vboxGuestActual
-    - python
     - vscode
     - git
-    - docker
+    - podman
     - golang
     - kubectl
     - minikube
