@@ -1,4 +1,4 @@
-- name: Install prereq packages for docker
+- name: Install prereq packages for podman
   package:
     name: 
       - apt-transport-https
