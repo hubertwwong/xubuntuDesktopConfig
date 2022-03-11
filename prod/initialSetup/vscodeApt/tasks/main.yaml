@@ -1,10 +1,17 @@
-- name: Add an APT signing key from MSFT
+- name: VSCode - Add an APT signing key from MSFT
   ansible.builtin.apt_key:
     url: https://packages.microsoft.com/keys/microsoft.asc
     state: present
   become: yes
 
-- name: Install VSCode
+- name: VSCode - Add repo
+  apt_repository:
+    repo: "deb [arch=amd64] https://packages.microsoft.com/repos/code stable main"
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: VSCode - Install
   package:
     name:
       - apt-transport-https
