@@ -11,7 +11,7 @@
     - python
     - vboxGuest
     - vboxGuestActual
-    - vscode
+    - vscodeApt
     - git
     - docker-ce
     - golang

@@ -3,7 +3,8 @@
     name:
       - curl
       - git
-      - gnome-online-accounts 
+      - gnome-online-accounts
+      - gpg 
       - htop
       - keepassxc
       - libavcodec-extra 
@@ -11,6 +12,7 @@
       - synaptic
       - tmux 
       - vim
+      - wget
     state: present
     update_cache: true
   become: yes
