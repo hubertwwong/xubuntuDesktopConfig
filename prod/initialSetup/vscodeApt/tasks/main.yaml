@@ -2,6 +2,7 @@
   ansible.builtin.apt_key:
     url: https://packages.microsoft.com/keys/microsoft.asc
     state: present
+  become: yes
 
 - name: Install VSCode
   package:
