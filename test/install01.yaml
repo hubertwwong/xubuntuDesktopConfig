@@ -2,7 +2,7 @@
 - hosts: 127.0.0.1
   tasks:
   - name: Ansible apt with_items example
-    apt:
+    ansible.builtin.apt:
       name: "{{ item }}"
       update_cache: true
       state: present
