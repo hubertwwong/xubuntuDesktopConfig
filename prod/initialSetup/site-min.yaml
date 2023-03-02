@@ -8,14 +8,9 @@
     - timezone
     - dot
     - chrome
-    - python
-    - vboxGuest
-    - vboxGuestActual
     - vscodeApt
+    - python
+    - golang
     - git
     - docker-ce
-    - golang
-    - kubectl
-    - minikube
-    - helm
     - resilio
