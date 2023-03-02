@@ -3,7 +3,7 @@
     pkg: 
     - fonts-liberation
     - libu2f-udev
-  state: present
+    state: present
 
 - name: Download google chrome deb
   get_url:
