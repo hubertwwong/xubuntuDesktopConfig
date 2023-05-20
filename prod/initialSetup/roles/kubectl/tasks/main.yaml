@@ -1,6 +1,6 @@
 # https://kubernetes.io/docs/tasks/tools/install-kubectl/
 - name: Install prereq packages for kubectl
-  package:
+  ansible.builtin.package:
     name:
       - apt-transport-https 
       - gnupg2
@@ -20,7 +20,7 @@
   become: yes
 
 - name: Install kubectl
-  package:
+  ansible.builtin.package:
     name:
       - kubectl
     state: present

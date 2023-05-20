@@ -12,7 +12,7 @@
   become: yes
 
 - name: VSCode - Install
-  package:
+  ansible.builtin.package:
     name:
       - apt-transport-https
       - code

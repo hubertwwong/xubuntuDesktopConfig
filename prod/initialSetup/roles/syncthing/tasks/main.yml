@@ -1,7 +1,8 @@
 - name: Install syncthing
-  package:
+  ansible.builtin.package:
     name:
       - syncthing
+    state: present
   become: yes
 
 - name: Create directory
