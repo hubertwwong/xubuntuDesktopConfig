@@ -4,6 +4,8 @@
   ansible.builtin.package:
     name:
       - xrdp
+      - xfce4
+      - xfce4-goodies
     state: present
   become: yes
 
@@ -18,6 +20,12 @@
   ansible.builtin.user:
     name: xrdp
     group: ssl-cert
+  become: yes
+
+- name: Copy startwm.sh to start with xfce4
+  ansible.builtin.copy:
+    src: startwm.sh
+    dest: /etc/xrdp
   become: yes
 
 - name: Restart xrdp
