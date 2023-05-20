@@ -1,0 +1,16 @@
+- name: Install syncthing
+  package:
+    name:
+      - syncthing
+  become: yes
+
+- name: Create directory
+  ansible.builtin.file:
+    path: ./config/autostart
+    state: directory
+
+- name: Copy autostart file
+  ansible.builtin.copy:
+    src: /usr/share/applications/syncthing-start.desktop 
+    dest: ./config/autostart/
+  become: yes
