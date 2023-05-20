@@ -3,17 +3,22 @@
     name:
       - curl
       - git
-      - gnome-online-accounts
       - gpg 
       - htop
-      - keepassxc
-      - libavcodec-extra 
-      - software-properties-common
-      - synaptic
-      - tmux 
+      - net-tools 
       - vim
       - wget
     state: present
     update_cache: true
   become: yes
-    
+# net-tools for debian ipconfig.
+
+- name: Install some extra packages
+  ansible.builtin.package:
+    name:
+      - gnome-online-accounts
+      - keepassxc
+      - libavcodec-extra 
+    state: present
+    update_cache: true
+  become: yes
