@@ -4,6 +4,7 @@
 - name: Run the other roles
   hosts: localhost
   roles:
+    - sudoers
     - initialPackages
     - timezone
     - dot

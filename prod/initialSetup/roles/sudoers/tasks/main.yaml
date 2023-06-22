@@ -1,0 +1,6 @@
+
+- name: add user to sudo group
+  shell: "usermod -aG sudo {{ ansible_user_id }}"
+  args:
+    executable: /bin/bash
+  become: true
