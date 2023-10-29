@@ -1,8 +1,0 @@
-- name: Make sudo without password for {{ username }} user
-  copy:
-    dest: "/etc/sudoers.d/{{ username }}-sudo-user"
-    content: "{{ username }} ALL=(ALL) NOPASSWD:ALL"
-    mode: 0440
-  become: yes
-  become_user: root
-
