@@ -1,17 +1,27 @@
+<<<<<<< HEAD
 - name: Install some basic packages
   package:
+=======
+- name: Install some basic pacakge useful for the rest of the install process.
+  ansible.builtin.package:
+>>>>>>> 475d658f4c1eb9750bd850a41c08b780dbd18ffb
     name:
       - apt-transport-https
       - curl
       - git
       - gpg 
       - htop
+<<<<<<< HEAD
       - software-properties-common
+=======
+      - net-tools 
+>>>>>>> 475d658f4c1eb9750bd850a41c08b780dbd18ffb
       - vim
       - wget
     state: present
     update_cache: true
   become: yes
+<<<<<<< HEAD
 
 - name: Install a few extra packages
   package:
@@ -21,6 +31,16 @@
       - keepassxc
       - libavcodec-extra
       - synaptic
+=======
+# net-tools for debian ipconfig.
+
+- name: Install some extra packages
+  ansible.builtin.package:
+    name:
+      - gnome-online-accounts
+      - keepassxc
+      - libavcodec-extra 
+>>>>>>> 475d658f4c1eb9750bd850a41c08b780dbd18ffb
     state: present
     update_cache: true
   become: yes

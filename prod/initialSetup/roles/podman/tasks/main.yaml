@@ -1,5 +1,5 @@
 - name: Install prereq packages for podman
-  package:
+  ansible.builtin.package:
     name: 
       - curl
       - wget
@@ -24,8 +24,9 @@
   become: yes
 
 - name: Install podman
-  package:
+  ansible.builtin.package:
     name: 
       - podman
     update_cache: yes
+    state: present
   become: yes

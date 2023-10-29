@@ -12,7 +12,7 @@
   become: yes
 
 - name: Install resilio sync
-  package:
+  ansible.builtin.package:
     name:
       - software-properties-common
       - resilio-sync

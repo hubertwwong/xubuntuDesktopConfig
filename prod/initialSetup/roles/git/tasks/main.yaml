@@ -1,7 +1,8 @@
 - name: Install git
-  package:
+  ansible.builtin.package:
     name: 
       - git
+    state: present
   become: yes
 
 # Note: Need double quotes to appear around the name because names could have spaces.
