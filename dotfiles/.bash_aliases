@@ -165,9 +165,7 @@ alias aaClean="yarn cache clean; docker system prune -a -f;"
 # Programming Langs
 ##############################################################################
  
-# Mise Polyglot Runtime Manager
-###############################
-eval "$(mise activate bash)"
+
 
 
 
