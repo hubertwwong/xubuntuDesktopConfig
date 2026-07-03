@@ -38,8 +38,8 @@
     content: |
       [tools]
       node = "lts"
-      go = "1.22"
-      python = "3.11"
+      go = "latest"
+      python = "latest"
       kubectl = "latest"
       helm = "latest"
     mode: '0644'
