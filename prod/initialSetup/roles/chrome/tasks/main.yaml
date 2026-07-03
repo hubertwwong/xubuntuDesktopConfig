@@ -13,5 +13,6 @@
     mode: 0755
 
 - name: Install google chrome
-  shell: dpkg -i /tmp/chrome.deb
+  ansible.builtin.apt:
+    deb: /tmp/chrome.deb
   become: yes

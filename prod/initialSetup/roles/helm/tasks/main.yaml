@@ -1,6 +1,6 @@
 - name: Add helm key
   apt_key:
-    url: https://helm.baltorepo.com/organization/signing.asc
+    url: https://baltocdn.com/helm/stable/debian/gpg
     state: present
   become: yes
  

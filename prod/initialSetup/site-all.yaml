@@ -11,9 +11,7 @@
     - dot
     - chrome
     - python
-    - vscode
+    - vscodeApt
     - git
     - docker-ce
-    - golang
-    - helm
-    - resilio
+    - mise

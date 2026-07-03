@@ -10,7 +10,6 @@
     - chrome
     - vscodeApt
     - python
-    - golang
     - git
     - docker-ce
-    - resilio
+    - mise

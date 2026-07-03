@@ -11,8 +11,8 @@
     - chrome
     - vscodeApt
     - python
-    - golang
     - git
     - docker-ce
+    - mise
     - syncthing
     - xrdp

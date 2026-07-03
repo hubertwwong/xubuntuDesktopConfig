@@ -7,7 +7,7 @@ echo "> .bash_aliases"
 # MUST CHANGE
 # You want to set these per machine.
 ZZ_SYNC_DIR="/home/hubert/zzz/sync/vagrant"
-ZZ_SCRIPTS_DIR="~/zzz/xubuntuDesktopConfig"
+ZZ_SCRIPTS_DIR="~/zzz/debianDesktopConfig"
 #source scripts_env.sh
 
 # Other directories.
@@ -165,21 +165,11 @@ alias aaClean="yarn cache clean; docker system prune -a -f;"
 # Programming Langs
 ##############################################################################
  
-# Golang
-########
+# Mise Polyglot Runtime Manager
+###############################
+eval "$(mise activate bash)"
 
-# Path for golang binary
-export PATH=$PATH:$HOME/.local/bin:/usr/local/go/bin
-# local/bin is for python pip
-# /usr/local/go/bin is for golang
 
-# Java
-######
-
-# Base assumption. This is using the ubuntu install of jdk and maven
-
-# JAVA HOME required for maven
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
 # Node
 ######
@@ -196,8 +186,6 @@ alias aaNodeCleanNPM="sudo find . -name "node_modules" -type d -prune -exec rm -
 
 # Python
 ########
-# Poetry. Assumes its installed. First part if
-[ -d "$HOME/.poetry/env" ] && source $HOME/.poetry/env
 # set set python to python 3...
 # NOTE: ansible has a ln command. Not required.
 # alias python="python3"

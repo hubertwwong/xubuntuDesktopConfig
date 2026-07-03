@@ -9,10 +9,8 @@
   ansible.builtin.file:
     path: "{{ ansible_env.HOME}}/.config/autostart"
     state: directory
-  become: yes
 
 - name: Copy autostart file
   ansible.builtin.copy:
     src: /usr/share/applications/syncthing-start.desktop 
     dest: "{{ ansible_env.HOME}}/.config/autostart"
-  become: yes

@@ -1,0 +1,50 @@
+- name: Ensure keyring directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Download mise GPG key (ascii armored)
+  ansible.builtin.get_url:
+    url: https://mise.jdx.dev/gpg-key.pub
+    dest: /etc/apt/keyrings/mise-archive-keyring.asc
+    mode: '0644'
+  become: yes
+
+- name: Add mise apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.asc arch=amd64] https://mise.jdx.dev/deb stable main"
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Install mise package
+  ansible.builtin.package:
+    name:
+      - mise
+    state: present
+  become: yes
+
+- name: Ensure mise config directory exists for user
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/mise"
+    state: directory
+    mode: '0755'
+
+- name: Configure global tools in mise config.toml
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.config/mise/config.toml"
+    content: |
+      [tools]
+      node = "lts"
+      go = "1.22"
+      python = "3.11"
+      kubectl = "latest"
+      helm = "latest"
+    mode: '0644'
+
+- name: Install all configured tools in mise
+  ansible.builtin.shell: mise install --yes
+  register: mise_install_output
+  changed_when: "'Installing' in mise_install_output.stdout or 'Downloading' in mise_install_output.stdout"

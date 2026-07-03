@@ -6,15 +6,29 @@
       - gnupg2
   become: yes
 
-- name: Get kubectl gpg key
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
+- name: Ensure keyring directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
   become: yes
 
-- name: Add kubectl repo. Repo is hard code which isn't great
-  apt_repository:
+- name: Download Kubernetes signing key
+  ansible.builtin.get_url:
+    url: https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key
+    dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
+    mode: '0644'
+  become: yes
+
+- name: Remove deprecated legacy Kubernetes repository
+  ansible.builtin.apt_repository:
     repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    state: absent
+  become: yes
+
+- name: Add modern Kubernetes apt repository
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /"
     state: present
     update_cache: yes
   become: yes

@@ -9,26 +9,25 @@
     state: present
   become: yes
 
-- name: Get docker GPG key
-  apt_key: 
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
+- name: Ensure keyring directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
   become: yes
 
-- name: Add docker repo. User specifies UBUNTU_CODE_NAME
-  apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{code_name}} stable"
-    state: present
-    update_cache: yes
-  when: code_name != ""
+- name: Download Docker GPG key
+  ansible.builtin.get_url:
+    url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '0644'
   become: yes
 
-- name: Add docker repo. Fallback to safe repo since UBUNTU_CODE_NAME was not specified
-  apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{safe_code_name}} stable"
+- name: Add docker repo
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
     state: present
     update_cache: yes
-  when: code_name == ""
   become: yes
 
 - name: Install docker and docker compose
