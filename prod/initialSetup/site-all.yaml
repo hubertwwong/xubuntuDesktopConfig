@@ -4,14 +4,14 @@
 - name: Run the other roles
   hosts: localhost
   roles:
-    - initialPackages 
-    - gnomeAccounts
-    - gnomeSettings
+    - initial_packages
+    - gnome_accounts
+    - gnome_settings
     - timezone
     - dot
     - chrome
     - python
-    - vscodeApt
+    - vscode_apt
     - git
-    - docker-ce
+    - docker_ce
     - mise

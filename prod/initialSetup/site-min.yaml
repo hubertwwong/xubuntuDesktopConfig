@@ -4,12 +4,12 @@
 - name: Run the other roles
   hosts: localhost
   roles:
-    - initialPackages
+    - initial_packages
     - timezone
     - dot
     - chrome
-    - vscodeApt
+    - vscode_apt
     - python
     - git
-    - docker-ce
+    - docker_ce
     - mise
