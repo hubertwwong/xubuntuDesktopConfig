@@ -1,0 +1,14 @@
+[tools]
+node = "lts"
+go = "latest"
+python = "latest"
+kubectl = "latest"
+helm = "latest"
+k9s = "latest"
+eza = "latest"
+bat = "latest"
+fd = "latest"
+duf = "latest"
+[settings]
+env_file = ".env"
+

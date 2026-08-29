@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+#
+# update-system - Comprehensive System & Language Update Script
+# Updates APT packages, Mise languages & tools, Flatpak/Snap packages.
+
+set -euo pipefail
+
+# ANSI Color Codes
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+YELLOW='\033[1;33m'
+BOLD='\033[1m'
+RESET='\033[0m'
+
+echo -e "${BOLD}${CYAN}==========================================${RESET}"
+echo -e "${BOLD}${CYAN}   Starting Full System & Tool Update    ${RESET}"
+echo -e "${BOLD}${CYAN}==========================================${RESET}\n"
+
+# 1. Update APT System Packages
+if command -v apt &>/dev/null; then
+    echo -e "${BOLD}${YELLOW}[1/4] Updating APT System Packages...${RESET}"
+    sudo apt update
+    sudo apt upgrade -y
+    sudo apt autoremove -y
+    sudo apt autoclean
+    echo -e "${GREEN}✓ APT packages updated successfully.${RESET}\n"
+fi
+
+# 2. Update Mise Programming Languages & Dev Tools
+if command -v mise &>/dev/null; then
+    echo -e "${BOLD}${YELLOW}[2/4] Updating Mise Languages & CLI Tools...${RESET}"
+    mise upgrade
+    echo -e "${GREEN}✓ Mise languages and tools updated successfully.${RESET}\n"
+fi
+
+# 3. Update Flatpak / Snap Packages (if installed)
+if command -v flatpak &>/dev/null; then
+    echo -e "${BOLD}${YELLOW}[3/4] Updating Flatpak Applications...${RESET}"
+    flatpak update -y
+    echo -e "${GREEN}✓ Flatpak packages updated successfully.${RESET}\n"
+elif command -v snap &>/dev/null; then
+    echo -e "${BOLD}${YELLOW}[3/4] Updating Snap Packages...${RESET}"
+    sudo snap refresh
+    echo -e "${GREEN}✓ Snap packages updated successfully.${RESET}\n"
+else
+    echo -e "${CYAN}[3/4] Skipping Flatpak/Snap (not installed).${RESET}\n"
+fi
+
+# 4. Atuin Update (if installed)
+if command -v atuin &>/dev/null; then
+    echo -e "${BOLD}${YELLOW}[4/4] Checking Atuin Updates...${RESET}"
+    atuin update 2>/dev/null || true
+    echo -e "${GREEN}✓ Atuin check complete.${RESET}\n"
+fi
+
+echo -e "${BOLD}${GREEN}==========================================${RESET}"
+echo -e "${BOLD}${GREEN}   All updates completed successfully!   ${RESET}"
+echo -e "${BOLD}${GREEN}==========================================${RESET}"

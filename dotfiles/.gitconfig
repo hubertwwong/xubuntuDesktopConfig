@@ -1,0 +1,31 @@
+[user]
+	name = Hubert Wong
+	email = hubertwwong@gmail.com
+[credential]
+	helper = cache --timeout=3153600000
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[init]
+	defaultBranch = main
+[pull]
+	rebase = false
+[column]
+	ui = auto
+[branch]
+	sort = -committerdate
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	ci = commit
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	unstage = restore --staged
+
+[core]
+	excludesfile = /home/vboxuser/.gitignore_global

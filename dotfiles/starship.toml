@@ -1,0 +1,108 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$c\
+$cpp\
+$rust\
+$golang\
+$nodejs\
+$bun\
+$python\
+$docker_context\
+$time\
+$line_break\
+$character"""
+
+palette = 'gruvbox_dark'
+
+[palettes.gruvbox_dark]
+color_fg0 = '#fbf1c7'
+color_bg1 = '#3c3836'
+color_bg3 = '#665c54'
+color_blue = '#83a598'
+color_aqua = '#8ec07c'
+color_green = '#b8bb26'
+color_orange = '#fe8019'
+color_purple = '#d3869b'
+color_red = '#fb4934'
+color_yellow = '#fabd2f'
+
+[username]
+show_always = false
+style_user = "bold color_orange"
+style_root = "bold color_red"
+format = '[$user]($style) '
+
+[hostname]
+ssh_only = true
+style = "bold color_yellow"
+format = '@[$hostname]($style) '
+
+[directory]
+style = "bold color_blue"
+format = "[$path]($style) "
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = "🌿 "
+style = "bold color_aqua"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold color_yellow"
+format = '([$all_status$ahead_behind]($style) )'
+conflicted = "="
+ahead = "⇡${count}"
+behind = "⇣${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+untracked = "?"
+stashed = "$"
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+[nodejs]
+symbol = "⬢ "
+style = "bold color_green"
+format = 'via [$symbol($version)]($style) '
+
+[python]
+symbol = "🐍 "
+style = "bold color_yellow"
+format = 'via [$symbol($version)]($style) '
+
+[golang]
+symbol = "🐹 "
+style = "bold color_blue"
+format = 'via [$symbol($version)]($style) '
+
+[rust]
+symbol = "🦀 "
+style = "bold color_orange"
+format = 'via [$symbol($version)]($style) '
+
+[docker_context]
+symbol = "🐳 "
+style = "bold color_blue"
+format = '[$symbol$context]($style) '
+
+[time]
+disabled = false
+time_format = "%T"
+style = "bold color_purple"
+format = 'at [$time]($style) '
+
+[line_break]
+disabled = false
+
+[character]
+success_symbol = '[❯](bold color_green)'
+error_symbol = '[❯](bold color_red)'
+vimcmd_symbol = '[❮](bold color_green)'

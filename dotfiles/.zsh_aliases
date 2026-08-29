@@ -1,4 +1,4 @@
-#!/bin/bash
+# ~/.zsh_aliases - Zsh Aliases & Helper Functions
 
 # Paths & Environment
 ZZ_SYNC_DIR="$HOME/syncthing/vagrant"
@@ -7,8 +7,10 @@ ZZ_SCRIPTS_DIR="$HOME/syncthing/vagrant/ops/desktop-setup/debianDesktopConfig"
 export GPODDER_DOWNLOAD_DIR="$ZZ_SYNC_DIR/../podcasts"
 export email="hubertwwong@gmail.com"
 
-# Add scripts bin directory to PATH
-export PATH=$PATH:$ZZ_SCRIPTS_DIR/bin
+# Add scripts bin directory to PATH if not already present
+if [[ ":$PATH:" != *":$ZZ_SCRIPTS_DIR/bin:"* ]]; then
+    export PATH="$PATH:$ZZ_SCRIPTS_DIR/bin"
+fi
 
 # Docker Helpers
 docker-ips() {
@@ -63,8 +65,8 @@ alias update-system="update-system"
 alias aaUpgradeAll="ansible-playbook -v --ask-become-pass $ZZ_SCRIPTS_DIR/prod/initialSetup/site-all.yaml"
 
 # Shell Reloading
-alias aaSourceBashrc="source ~/.bashrc"
 alias aaSourceZshrc="source ~/.zshrc"
+alias aaSourceBashrc="source ~/.bashrc"
 
 # Git Aliases
 alias ggi="git init"
