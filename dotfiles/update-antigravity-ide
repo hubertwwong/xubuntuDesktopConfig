@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# update-antigravity-ide: Updater script for Google Antigravity IDE on Linux
+# update-antigravity-ide: Dynamic Updater for Google Antigravity IDE on Linux
 #
 
 set -euo pipefail
@@ -17,28 +17,41 @@ if [ -f "$VERSION_FILE" ]; then
     CURRENT_VERSION=$(cat "$VERSION_FILE" | tr -d '[:space:]')
 fi
 
-echo "Antigravity IDE - Current Version: $CURRENT_VERSION"
+echo "Antigravity IDE - Current Installed Version: $CURRENT_VERSION"
 
-# Fetch latest download URL or use default known release
-# In Antigravity 2.x, releases are distributed via Google CDN
+# 1. Fetch Latest Download URL dynamically from official site
+echo "Checking for latest release on antigravity.google..."
 LATEST_URL=""
-if [ -f "$SOURCE_URL_FILE" ]; then
-    LATEST_URL=$(cat "$SOURCE_URL_FILE" | tr -d '[:space:]')
+if command -v curl >/dev/null 2>&1; then
+    LATEST_URL=$(curl -sL --compressed "https://antigravity.google/download" 2>/dev/null | grep -o 'https://edgedl.me.gvt1.com/edgedl/release2/[^"]*linux-x64/Antigravity%20IDE.tar.gz' | head -n 1 || true)
 fi
 
-# If a custom URL or version is passed as argument:
+# Fallback to stored URL or known latest release if scraping fails
+if [ -z "$LATEST_URL" ]; then
+    if [ -f "$SOURCE_URL_FILE" ]; then
+        LATEST_URL=$(cat "$SOURCE_URL_FILE" | tr -d '[:space:]')
+    else
+        LATEST_URL="https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/2.5.5-4923483625488384/linux-x64/Antigravity%20IDE.tar.gz"
+    fi
+fi
+
+# If a custom URL is explicitly passed as argument:
 if [ "${1:-}" != "" ] && [ "${1:-}" != "-y" ]; then
     if [[ "$1" =~ ^https?:// ]]; then
         LATEST_URL="$1"
     fi
 fi
 
-if [ -z "$LATEST_URL" ]; then
-    echo "Error: No download URL configured in $SOURCE_URL_FILE" >&2
-    exit 1
-fi
+# Extract version from URL if available
+TARGET_VERSION=$(echo "$LATEST_URL" | grep -o 'stable/[^/]*' | cut -d'/' -f2 | cut -d'-' -f1 || echo "latest")
+echo "Latest Available Version: $TARGET_VERSION"
+echo "Download URL: $LATEST_URL"
 
-echo "Source URL: $LATEST_URL"
+# Check if already on target version (unless forced)
+if [ "$CURRENT_VERSION" = "$TARGET_VERSION" ] && [ "${1:-}" != "--force" ]; then
+    echo "✓ Antigravity IDE is already up-to-date ($CURRENT_VERSION)."
+    exit 0
+fi
 
 # Create temporary staging directory
 TMP_DIR=$(mktemp -d /tmp/antigravity-ide-update.XXXXXX)
@@ -49,8 +62,8 @@ trap cleanup EXIT
 
 ARCHIVE="$TMP_DIR/Antigravity_IDE.tar.gz"
 
-echo "Downloading Antigravity IDE package..."
-curl -fsSL -o "$ARCHIVE" "$LATEST_URL"
+echo "Downloading Antigravity IDE ($TARGET_VERSION)..."
+curl -fSL -o "$ARCHIVE" "$LATEST_URL"
 
 echo "Extracting package..."
 mkdir -p "$TMP_DIR/extracted"
@@ -86,13 +99,16 @@ fi
 # Update symlink
 sudo ln -sf "$APP_DIR/antigravity-ide" "$BIN_LINK"
 
-# Update version file if product.json exists
+# Save updated URL and Version
+echo "$LATEST_URL" | sudo tee "$SOURCE_URL_FILE" > /dev/null
+
 if [ -f "$APP_DIR/resources/app/product.json" ]; then
-    NEW_VERSION=$(grep -o '"ideVersion"[[:space:]]*:[[:space:]]*"[^"]*"' "$APP_DIR/resources/app/product.json" | cut -d'"' -f4 || echo "$CURRENT_VERSION")
+    NEW_VERSION=$(grep -o '"ideVersion"[[:space:]]*:[[:space:]]*"[^"]*"' "$APP_DIR/resources/app/product.json" | cut -d'"' -f4 || echo "$TARGET_VERSION")
     echo "$NEW_VERSION" | sudo tee "$VERSION_FILE" > /dev/null
-    echo "✓ Successfully installed Antigravity IDE version: $NEW_VERSION"
+    echo "✓ Successfully upgraded Antigravity IDE to version: $NEW_VERSION"
 else
-    echo "✓ Antigravity IDE updated successfully."
+    echo "$TARGET_VERSION" | sudo tee "$VERSION_FILE" > /dev/null
+    echo "✓ Antigravity IDE updated successfully to: $TARGET_VERSION"
 fi
 
 # Verify desktop shortcut exists
@@ -112,4 +128,4 @@ StartupWMClass=antigravity-ide
 DESKTOPEOF
 fi
 
-echo "✓ Update complete."
+echo "✓ Upgrade complete."
