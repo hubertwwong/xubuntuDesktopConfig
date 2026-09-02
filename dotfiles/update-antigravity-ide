@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+#
+# update-antigravity-ide: Updater script for Google Antigravity IDE on Linux
+#
+
+set -euo pipefail
+
+INSTALL_DIR="/opt/antigravity-ide"
+APP_DIR="$INSTALL_DIR/Antigravity-IDE"
+VERSION_FILE="$INSTALL_DIR/.antigravity-linux-version"
+SOURCE_URL_FILE="$INSTALL_DIR/.antigravity-linux-source-url"
+DESKTOP_FILE="/usr/share/applications/antigravity-ide.desktop"
+BIN_LINK="/usr/local/bin/antigravity-ide"
+
+CURRENT_VERSION="unknown"
+if [ -f "$VERSION_FILE" ]; then
+    CURRENT_VERSION=$(cat "$VERSION_FILE" | tr -d '[:space:]')
+fi
+
+echo "Antigravity IDE - Current Version: $CURRENT_VERSION"
+
+# Fetch latest download URL or use default known release
+# In Antigravity 2.x, releases are distributed via Google CDN
+LATEST_URL=""
+if [ -f "$SOURCE_URL_FILE" ]; then
+    LATEST_URL=$(cat "$SOURCE_URL_FILE" | tr -d '[:space:]')
+fi
+
+# If a custom URL or version is passed as argument:
+if [ "${1:-}" != "" ] && [ "${1:-}" != "-y" ]; then
+    if [[ "$1" =~ ^https?:// ]]; then
+        LATEST_URL="$1"
+    fi
+fi
+
+if [ -z "$LATEST_URL" ]; then
+    echo "Error: No download URL configured in $SOURCE_URL_FILE" >&2
+    exit 1
+fi
+
+echo "Source URL: $LATEST_URL"
+
+# Create temporary staging directory
+TMP_DIR=$(mktemp -d /tmp/antigravity-ide-update.XXXXXX)
+cleanup() {
+    rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT
+
+ARCHIVE="$TMP_DIR/Antigravity_IDE.tar.gz"
+
+echo "Downloading Antigravity IDE package..."
+curl -fsSL -o "$ARCHIVE" "$LATEST_URL"
+
+echo "Extracting package..."
+mkdir -p "$TMP_DIR/extracted"
+tar -xzf "$ARCHIVE" -C "$TMP_DIR/extracted"
+
+# Locate extracted app directory
+EXTRACTED_APP=$(find "$TMP_DIR/extracted" -maxdepth 2 -type f -name "antigravity-ide" -exec dirname {} \;)
+
+if [ -z "$EXTRACTED_APP" ] || [ ! -d "$EXTRACTED_APP" ]; then
+    echo "Error: Could not locate extracted Antigravity IDE application directory" >&2
+    exit 1
+fi
+
+# Ensure target directory exists
+sudo mkdir -p "$INSTALL_DIR"
+
+# Install to application directory
+echo "Installing to $APP_DIR..."
+sudo rm -rf "$APP_DIR.old"
+if [ -d "$APP_DIR" ]; then
+    sudo mv "$APP_DIR" "$APP_DIR.old"
+fi
+
+sudo mv "$EXTRACTED_APP" "$APP_DIR"
+sudo rm -rf "$APP_DIR.old"
+
+# Configure chrome-sandbox permissions for Electron SUID sandbox
+if [ -f "$APP_DIR/chrome-sandbox" ]; then
+    sudo chown root:root "$APP_DIR/chrome-sandbox"
+    sudo chmod 4755 "$APP_DIR/chrome-sandbox"
+fi
+
+# Update symlink
+sudo ln -sf "$APP_DIR/antigravity-ide" "$BIN_LINK"
+
+# Update version file if product.json exists
+if [ -f "$APP_DIR/resources/app/product.json" ]; then
+    NEW_VERSION=$(grep -o '"ideVersion"[[:space:]]*:[[:space:]]*"[^"]*"' "$APP_DIR/resources/app/product.json" | cut -d'"' -f4 || echo "$CURRENT_VERSION")
+    echo "$NEW_VERSION" | sudo tee "$VERSION_FILE" > /dev/null
+    echo "✓ Successfully installed Antigravity IDE version: $NEW_VERSION"
+else
+    echo "✓ Antigravity IDE updated successfully."
+fi
+
+# Verify desktop shortcut exists
+if [ ! -f "$DESKTOP_FILE" ]; then
+    sudo tee "$DESKTOP_FILE" > /dev/null << 'DESKTOPEOF'
+[Desktop Entry]
+Name=Antigravity IDE
+Comment=Google Antigravity IDE
+Exec=/usr/local/bin/antigravity-ide %F
+Icon=antigravity-ide
+Terminal=false
+Type=Application
+Categories=Development;IDE;
+MimeType=inode/directory;text/plain;application/x-code-workspace;application/x-antigravity-workspace;x-scheme-handler/antigravity-ide;
+StartupNotify=true
+StartupWMClass=antigravity-ide
+DESKTOPEOF
+fi
+
+echo "✓ Update complete."
