@@ -9,6 +9,7 @@ eza = "latest"
 bat = "latest"
 fd = "latest"
 duf = "latest"
+uv = "latest"
 [settings]
 env_file = ".env"
 
