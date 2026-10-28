@@ -35,3 +35,9 @@ ENV/
 .idea/
 *.suo
 *.user
+
+# AI Agent Data, Caches & Transcripts
+ai/data/
+ai/scratch/
+.gemini/
+*.jsonl

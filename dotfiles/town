@@ -237,6 +237,51 @@ def cmd_sync_ledger(root: Path):
     print(f"✅ Synchronized {ledger_file}")
 
 
+def cmd_clean(root: Path):
+    """Clean temporary scratch files, __pycache__, and reset idle bulletin."""
+    cleaned = []
+    scratch_dir = root / "ai" / "scratch"
+    if scratch_dir.is_dir():
+        for f in scratch_dir.glob("*"):
+            if f.is_file():
+                f.unlink()
+                cleaned.append(f"ai/scratch/{f.name}")
+
+    for p in root.rglob("__pycache__"):
+        if p.is_dir() and "syncthing" not in str(p):
+            import shutil
+            shutil.rmtree(p, ignore_errors=True)
+            cleaned.append(str(p.relative_to(root)))
+
+    for p in root.rglob(".pytest_cache"):
+        if p.is_dir() and "syncthing" not in str(p):
+            import shutil
+            shutil.rmtree(p, ignore_errors=True)
+            cleaned.append(str(p.relative_to(root)))
+
+    plans = get_all_plans(root)
+    active = [p for p in plans if p["status"].upper() not in ["COMPLETED", "DONE", "ARCHIVED"]]
+    if not active:
+        bulletin = root / "ai" / "bulletin.md"
+        if bulletin.is_file():
+            bulletin.write_text(
+                "# 🏛️ Town Hall Bulletin Board\n\n"
+                "> *Shared communication scratchpad for townspeople subagents. Reset by town clean.*\n\n"
+                "---\n\n"
+                "## Current Assignment\n"
+                "- **Status:** Idle / Ready for assignment\n",
+                encoding="utf-8",
+            )
+            cleaned.append("ai/bulletin.md (reset to idle)")
+
+    if cleaned:
+        print(f"🧹 Cleaned {len(cleaned)} item(s) in {root.name}:")
+        for item in cleaned:
+            print(f"   • {item}")
+    else:
+        print(f"✨ Project {root.name} is already completely clean.")
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="town",
@@ -252,6 +297,7 @@ def main():
 
     subparsers.add_parser("init", help="Initialize town tracking structure in current directory")
     subparsers.add_parser("sync", help="Sync and regenerate ai/ledger.md from ai/plans/")
+    subparsers.add_parser("clean", help="Clean temporary scratch files, caches, and idle bulletin")
 
     args = parser.parse_args()
     root = find_project_root()
@@ -266,6 +312,8 @@ def main():
         cmd_init(Path.cwd())
     elif args.command == "sync":
         cmd_sync_ledger(root)
+    elif args.command == "clean":
+        cmd_clean(root)
     else:
         parser.print_help()
 

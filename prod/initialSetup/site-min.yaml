@@ -9,6 +9,7 @@
     - dot
     - chrome
     - vscode_apt
+    - vscode_file_handles
     - python
     - git
     - docker_ce
