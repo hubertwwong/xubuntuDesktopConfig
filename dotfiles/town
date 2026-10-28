@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""town - Portable task and multi-agent plan tracker.
-
-Works across any project workspace by discovering the nearest `ai/` or `.git` root.
-"""
+"""town - Portable task and multi-agent plan tracker across workspaces."""
 
 import argparse
 import os
@@ -21,7 +18,6 @@ def find_project_root() -> Path:
         if (parent / ".git").is_dir() and (parent / "ai").is_dir():
             return parent
 
-    # Fallback to current working directory
     return curr
 
 
@@ -51,7 +47,7 @@ def parse_plan(plan_file: Path) -> dict:
                 v = v.strip().strip('"').strip("'")
                 meta[k] = v
 
-    # Count acceptance criteria
+    # Count acceptance criteria checkboxes
     all_checkboxes = re.findall(r"-\s*\[([ xX])\]", content)
     meta["total_criteria"] = len(all_checkboxes)
     meta["checked_criteria"] = sum(1 for c in all_checkboxes if c.lower() == "x")
@@ -84,15 +80,59 @@ def get_all_plans(root: Path) -> list[dict]:
     return plans
 
 
+def cmd_sync_ledger(root: Path, silent: bool = False):
+    """Regenerate ai/ledger.md from the plans in ai/plans/."""
+    plans_dir = root / "ai" / "plans"
+    if not plans_dir.is_dir():
+        return
+
+    plans = get_all_plans(root)
+    ledger_file = root / "ai" / "ledger.md"
+    active = [p for p in plans if p["status"].upper() not in ["COMPLETED", "DONE", "ARCHIVED"]]
+
+    lines = [
+        f"# 🏛️ Town Work Ledger | {root.name}\n",
+        f"*Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n",
+        "## Active Task\n",
+    ]
+
+    if active:
+        c = active[0]
+        crit = f" ({c['checked_criteria']}/{c['total_criteria']} criteria met)" if c['total_criteria'] else ""
+        lines.append(f"* **Plan ID:** `{c['id']}`")
+        lines.append(f"* **Title:** {c['title']}")
+        lines.append(f"* **Stage / Role:** 👤 {c['stage'].capitalize()}")
+        lines.append(f"* **Status:** 🟡 `{c['status'].upper()}`{crit}")
+        lines.append(f"* **File:** [`ai/plans/{c['file'].name}`](file://{c['file'].resolve()})")
+    else:
+        lines.append("🟢 **Status:** Idle (No active tasks)\n")
+
+    lines.append("\n---\n\n## All Tracked Plans\n")
+    lines.append("| Plan ID | Title | Stage | Status | Criteria | Plan File |")
+    lines.append("| :--- | :--- | :--- | :--- | :---: | :--- |")
+
+    for p in plans:
+        badge = "✅" if p["status"].upper() in ["COMPLETED", "DONE"] else "🟡"
+        crit = f"{p['checked_criteria']}/{p['total_criteria']}"
+        lines.append(
+            f"| **{p['id']}** | {p['title']} | {p['stage'].capitalize()} | {badge} `{p['status'].upper()}` | {crit} | [{p['file'].name}](file://{p['file'].resolve()}) |"
+        )
+
+    ledger_file.parent.mkdir(parents=True, exist_ok=True)
+    ledger_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    if not silent:
+        print(f"✅ Synchronized {ledger_file}")
+
+
 def cmd_status(root: Path):
     """Print current project status and active task."""
+    cmd_sync_ledger(root, silent=True)
     plans = get_all_plans(root)
     print("=" * 60)
     print(f"🏛️  TOWN WORK LEDGER | Project: {root.name}")
     print(f"📁 Root: {root}")
     print("=" * 60)
 
-    # Find active plan (IN_PROGRESS or not COMPLETED)
     active = [p for p in plans if p["status"].upper() not in ["COMPLETED", "DONE", "ARCHIVED"]]
     completed = [p for p in plans if p["status"].upper() in ["COMPLETED", "DONE", "ARCHIVED"]]
 
@@ -126,6 +166,7 @@ def cmd_status(root: Path):
 
 def cmd_list(root: Path):
     """List all tracked plans."""
+    cmd_sync_ledger(root, silent=True)
     plans = get_all_plans(root)
     if not plans:
         print(f"No plans found in {root / 'ai' / 'plans'}")
@@ -143,6 +184,7 @@ def cmd_list(root: Path):
 
 def cmd_show(root: Path, plan_id: str = None):
     """Display the full content of a plan."""
+    cmd_sync_ledger(root, silent=True)
     plans = get_all_plans(root)
     target = None
     if plan_id:
@@ -160,6 +202,55 @@ def cmd_show(root: Path, plan_id: str = None):
 
     print(f"\n--- {target['file'].name} ---")
     print(target["file"].read_text(encoding="utf-8"))
+
+
+def cmd_new(root: Path, title: str, flow: str = "Flow 1 (Full Council)"):
+    """Create a new plan file with next sequence ID and initial blueprint template."""
+    plans_dir = root / "ai" / "plans"
+    plans_dir.mkdir(parents=True, exist_ok=True)
+
+    # Determine next plan ID number
+    highest_num = 0
+    for f in plans_dir.glob("PLAN-*.md"):
+        m = re.match(r"^PLAN-(\d+)", f.name)
+        if m:
+            highest_num = max(highest_num, int(m.group(1)))
+
+    next_id = f"PLAN-{highest_num + 1:03d}"
+    slug = re.sub(r"[^a-zA-Z0-9]+", "_", title.strip().lower()).strip("_")
+    plan_filename = f"{next_id}_{slug}.md"
+    plan_path = plans_dir / plan_filename
+
+    now = datetime.now().isoformat()
+    template = f"""---
+id: {next_id}
+title: {title}
+status: IN_PROGRESS
+stage: planner
+created_at: {now}
+updated_at: {now}
+assigned_flow: {flow}
+---
+
+# {next_id}: {title}
+
+## 1. Blueprint by Planner
+- **Objective:** {title}
+- **Target Files:**
+  - `src/...`
+  - `tests/...`
+
+### Acceptance Criteria
+- [ ] Implement core functionality
+- [ ] Comprehensive unit test coverage
+- [ ] Zero regressions and clean linting
+"""
+    plan_path.write_text(template, encoding="utf-8")
+    cmd_sync_ledger(root, silent=True)
+
+    print(f"✅ Created plan: {next_id}")
+    print(f"   File:  {plan_path.relative_to(root)}")
+    print(f"   Stage: 👤 Planner | Status: 🟡 IN_PROGRESS")
 
 
 def cmd_init(root: Path):
@@ -196,45 +287,6 @@ def cmd_init(root: Path):
 
     print(f"✅ Initialized portable Town tracking structure in {root}")
     print("   Created: ai/plans/, ai/bulletin.md, ai/ledger.md, ai/todo.md")
-
-
-def cmd_sync_ledger(root: Path):
-    """Regenerate ai/ledger.md from the plans in ai/plans/."""
-    plans = get_all_plans(root)
-    ledger_file = root / "ai" / "ledger.md"
-    active = [p for p in plans if p["status"].upper() not in ["COMPLETED", "DONE", "ARCHIVED"]]
-
-    lines = [
-        f"# 🏛️ Town Work Ledger | {root.name}\n",
-        f"*Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n",
-        "## Active Task\n",
-    ]
-
-    if active:
-        c = active[0]
-        crit = f" ({c['checked_criteria']}/{c['total_criteria']} criteria met)" if c['total_criteria'] else ""
-        lines.append(f"* **Plan ID:** `{c['id']}`")
-        lines.append(f"* **Title:** {c['title']}")
-        lines.append(f"* **Stage / Role:** 👤 {c['stage'].capitalize()}")
-        lines.append(f"* **Status:** 🟡 `{c['status'].upper()}`{crit}")
-        lines.append(f"* **File:** [`ai/plans/{c['file'].name}`](file://{c['file'].resolve()})")
-    else:
-        lines.append("🟢 **Status:** Idle (No active tasks)\n")
-
-    lines.append("\n---\n\n## All Tracked Plans\n")
-    lines.append("| Plan ID | Title | Stage | Status | Criteria | Plan File |")
-    lines.append("| :--- | :--- | :--- | :--- | :---: | :--- |")
-
-    for p in plans:
-        badge = "✅" if p["status"].upper() in ["COMPLETED", "DONE"] else "🟡"
-        crit = f"{p['checked_criteria']}/{p['total_criteria']}"
-        lines.append(
-            f"| **{p['id']}** | {p['title']} | {p['stage'].capitalize()} | {badge} `{p['status'].upper()}` | {crit} | [{p['file'].name}](file://{p['file'].resolve()}) |"
-        )
-
-    ledger_file.parent.mkdir(parents=True, exist_ok=True)
-    ledger_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"✅ Synchronized {ledger_file}")
 
 
 def cmd_clean(root: Path):
@@ -274,6 +326,8 @@ def cmd_clean(root: Path):
             )
             cleaned.append("ai/bulletin.md (reset to idle)")
 
+    cmd_sync_ledger(root, silent=True)
+
     if cleaned:
         print(f"🧹 Cleaned {len(cleaned)} item(s) in {root.name}:")
         for item in cleaned:
@@ -295,6 +349,10 @@ def main():
     show_parser = subparsers.add_parser("show", help="Show details of a plan")
     show_parser.add_argument("plan_id", nargs="?", help="Plan ID to show (default: active plan)")
 
+    new_parser = subparsers.add_parser("new", help="Create a new plan draft with the next sequence ID")
+    new_parser.add_argument("title", help="Title of the plan")
+    new_parser.add_argument("--flow", default="Flow 1 (Full Council)", help="Assigned flow (default: Full Council)")
+
     subparsers.add_parser("init", help="Initialize town tracking structure in current directory")
     subparsers.add_parser("sync", help="Sync and regenerate ai/ledger.md from ai/plans/")
     subparsers.add_parser("clean", help="Clean temporary scratch files, caches, and idle bulletin")
@@ -308,10 +366,12 @@ def main():
         cmd_list(root)
     elif args.command == "show":
         cmd_show(root, args.plan_id)
+    elif args.command == "new":
+        cmd_new(root, args.title, args.flow)
     elif args.command == "init":
         cmd_init(Path.cwd())
     elif args.command == "sync":
-        cmd_sync_ledger(root)
+        cmd_sync_ledger(root, silent=False)
     elif args.command == "clean":
         cmd_clean(root)
     else:
