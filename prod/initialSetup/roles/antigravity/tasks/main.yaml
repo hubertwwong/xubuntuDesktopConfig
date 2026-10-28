@@ -9,6 +9,7 @@
     - "{{ ansible_env.HOME }}/.gemini/config"
     - "{{ ansible_env.HOME }}/.gemini/config/skills"
     - "{{ ansible_env.HOME }}/.gemini/config/plugins"
+    - "{{ ansible_env.HOME }}/.gemini/config/agents"
 
 - name: Antigravity - Deploy global agent config.json
   ansible.builtin.copy:
@@ -26,4 +27,10 @@
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/../../dotfiles/gemini/AGENTS.md"
     dest: "{{ ansible_env.HOME }}/.gemini/config/AGENTS.md"
+    mode: '0644'
+
+- name: Antigravity - Deploy custom agent definitions
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../../dotfiles/gemini/agents/"
+    dest: "{{ ansible_env.HOME }}/.gemini/config/agents/"
     mode: '0644'
