@@ -1,6 +1,7 @@
 # Ghostty Configuration
 theme = Gruvbox Dark
 font-size = 13
-gtk-titlebar = false
+gtk-titlebar = true
+window-decoration = auto
 copy-on-select = clipboard
 confirm-close-surface = false
