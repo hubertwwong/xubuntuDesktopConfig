@@ -15,13 +15,18 @@ setopt HIST_IGNORE_SPACE
 autoload -U compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
-# Load Zsh Plugins (Debian package locations)
-if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
+# Terminal window title support
+case "$TERM" in
+    xterm*|rxvt*|ghostty*)
+        precmd() {
+            print -Pn "\e]0;%n@%m: %~\a"
+        }
+        ;;
+esac
 
-if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# VTE Terminal Directory Tracking (GNOME Terminal, etc.)
+if [ -f /etc/profile.d/vte-2.91.sh ]; then
+    source /etc/profile.d/vte-2.91.sh
 fi
 
 # Load Zsh Aliases & Custom Functions
@@ -68,9 +73,8 @@ fi
 if command -v kubectl &>/dev/null; then
     alias k=kubectl
     source <(kubectl completion zsh)
-    compdef __start_kubectl k 2>/dev/null
+    compdef _kubectl k 2>/dev/null
 fi
-
 
 # Quality of Life Aliases
 alias ls='ls --color=auto'
@@ -78,3 +82,11 @@ alias ll='ls -la'
 alias la='ls -A'
 alias aaSourceZshrc="source ~/.zshrc"
 
+# Load Zsh Plugins (Debian packages - must be loaded after completions)
+if [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+if [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
