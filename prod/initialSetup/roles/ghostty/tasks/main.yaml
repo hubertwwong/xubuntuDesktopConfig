@@ -1,0 +1,81 @@
+---
+- name: Ghostty - Check if ghostty is installed
+  ansible.builtin.command: which ghostty
+  register: ghostty_check
+  failed_when: false
+  changed_when: false
+
+- name: Ghostty - Determine distribution and architecture
+  ansible.builtin.set_fact:
+    ghostty_codename: "{{ 'trixie' if ansible_distribution == 'Debian' and ansible_distribution_release not in ['trixie', 'forky'] else ansible_distribution_release }}"
+    ghostty_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }}"
+
+- name: Ghostty - Query latest release metadata from GitHub
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/mkasberg/ghostty-ubuntu/releases/latest
+    return_content: true
+    headers:
+      Accept: "application/vnd.github.v3+json"
+  register: ghostty_release_json
+  when: ghostty_check.rc != 0
+
+- name: Ghostty - Find matching deb download URL
+  ansible.builtin.set_fact:
+    ghostty_deb_url: "{{ (ghostty_release_json.content | from_json).assets | selectattr('browser_download_url', 'search', ghostty_arch ~ '_' ~ ghostty_codename ~ '.deb$') | map(attribute='browser_download_url') | first }}"
+  when: ghostty_check.rc != 0
+
+- name: Ghostty - Fallback URL if asset query did not return
+  ansible.builtin.set_fact:
+    ghostty_deb_url: "https://github.com/mkasberg/ghostty-ubuntu/releases/latest/download/ghostty_1.3.1-0~ppa2_{{ ghostty_arch }}_{{ ghostty_codename }}.deb"
+  when: ghostty_check.rc != 0 and (ghostty_deb_url is not defined or ghostty_deb_url == '')
+
+- name: Ghostty - Download deb package
+  ansible.builtin.get_url:
+    url: "{{ ghostty_deb_url }}"
+    dest: /tmp/ghostty.deb
+    mode: '0644'
+  when: ghostty_check.rc != 0
+
+- name: Ghostty - Install deb package
+  ansible.builtin.apt:
+    deb: /tmp/ghostty.deb
+    state: present
+  become: yes
+  when: ghostty_check.rc != 0
+
+- name: Ghostty - Remove temporary deb
+  ansible.builtin.file:
+    path: /tmp/ghostty.deb
+    state: absent
+  when: ghostty_check.rc != 0
+
+- name: Ghostty - Configure as default x-terminal-emulator
+  ansible.builtin.alternatives:
+    name: x-terminal-emulator
+    path: /usr/bin/ghostty
+    priority: 50
+  become: yes
+
+- name: Ghostty - Ensure config directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/ghostty"
+    state: directory
+    mode: '0755'
+
+- name: Ghostty - Remove conflicting config.ghostty if present
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.config/ghostty/config.ghostty"
+    state: absent
+
+- name: Ghostty - Deploy user configuration
+  ansible.builtin.copy:
+    dest: "{{ ansible_env.HOME }}/.config/ghostty/config"
+    content: |
+      # Ghostty Configuration
+      theme = Gruvbox Dark
+      font-size = 13
+      gtk-titlebar = true
+      window-decoration = auto
+      copy-on-select = clipboard
+      confirm-close-surface = false
+    mode: '0644'

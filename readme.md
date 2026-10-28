@@ -16,6 +16,7 @@ This setup configures the following packages and tools:
    * **helm** (Latest stable)
 5. **VirtualBox Guest Additions**: Natively installs `virtualbox-guest-dkms` and `virtualbox-guest-x11` packages directly through the package manager (removing manual GUI mounting of guest additions ISO).
 6. **Dotfiles & Bash Aliases**: Deploys dynamic prompts displaying Git branch and Kubernetes current contexts, along with aliases for Kubernetes (`k`), Minikube (`mk`), and Docker inspect commands.
+7. **Ghostty Terminal**: Dynamically installs the Ghostty terminal emulator via release deb package, configures it as default `x-terminal-emulator`, and provisions custom `Gruvbox Dark` styling with window controls.
 
 ## Pre-requisites
 Ensure `git` and `ansible` are installed on the host:
