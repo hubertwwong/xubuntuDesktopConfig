@@ -1,0 +1,274 @@
+#!/usr/bin/env python3
+"""town - Portable task and multi-agent plan tracker.
+
+Works across any project workspace by discovering the nearest `ai/` or `.git` root.
+"""
+
+import argparse
+import os
+import re
+import sys
+from datetime import datetime
+from pathlib import Path
+
+
+def find_project_root() -> Path:
+    """Find the project root by walking upwards looking for ai/plans, ai/ledger.md, or .git."""
+    curr = Path.cwd().resolve()
+    for parent in [curr] + list(curr.parents):
+        if (parent / "ai" / "plans").is_dir() or (parent / "ai" / "ledger.md").is_file():
+            return parent
+        if (parent / ".git").is_dir() and (parent / "ai").is_dir():
+            return parent
+
+    # Fallback to current working directory
+    return curr
+
+
+def parse_plan(plan_file: Path) -> dict:
+    """Extract metadata and criteria from a markdown plan file."""
+    content = plan_file.read_text(encoding="utf-8")
+    meta = {
+        "id": plan_file.stem.split("_")[0],
+        "title": plan_file.stem,
+        "status": "UNKNOWN",
+        "stage": "UNKNOWN",
+        "flow": "Standard",
+        "file": plan_file,
+        "total_criteria": 0,
+        "checked_criteria": 0,
+        "created_at": "",
+        "updated_at": "",
+    }
+
+    # Parse YAML frontmatter if present
+    frontmatter_match = re.match(r"^---\s*\n(.*?)\n---\s*\n", content, re.DOTALL)
+    if frontmatter_match:
+        for line in frontmatter_match.group(1).splitlines():
+            if ":" in line:
+                k, v = line.split(":", 1)
+                k = k.strip().lower()
+                v = v.strip().strip('"').strip("'")
+                meta[k] = v
+
+    # Count acceptance criteria
+    all_checkboxes = re.findall(r"-\s*\[([ xX])\]", content)
+    meta["total_criteria"] = len(all_checkboxes)
+    meta["checked_criteria"] = sum(1 for c in all_checkboxes if c.lower() == "x")
+
+    # Fallback title from first H1
+    if meta["title"] == plan_file.stem:
+        h1_match = re.search(r"^#\s+(.+)$", content, re.MULTILINE)
+        if h1_match:
+            meta["title"] = h1_match.group(1).strip()
+
+    return meta
+
+
+def get_all_plans(root: Path) -> list[dict]:
+    """Return all plans in ai/plans/ sorted by ID."""
+    plans_dir = root / "ai" / "plans"
+    if not plans_dir.is_dir():
+        return []
+
+    plans = []
+    for f in plans_dir.glob("*.md"):
+        if f.name in ["index.md", "README.md", "active.md"]:
+            continue
+        try:
+            plans.append(parse_plan(f))
+        except Exception:
+            continue
+
+    plans.sort(key=lambda p: p["id"])
+    return plans
+
+
+def cmd_status(root: Path):
+    """Print current project status and active task."""
+    plans = get_all_plans(root)
+    print("=" * 60)
+    print(f"🏛️  TOWN WORK LEDGER | Project: {root.name}")
+    print(f"📁 Root: {root}")
+    print("=" * 60)
+
+    # Find active plan (IN_PROGRESS or not COMPLETED)
+    active = [p for p in plans if p["status"].upper() not in ["COMPLETED", "DONE", "ARCHIVED"]]
+    completed = [p for p in plans if p["status"].upper() in ["COMPLETED", "DONE", "ARCHIVED"]]
+
+    if active:
+        current = active[0]
+        progress_bar = ""
+        if current["total_criteria"] > 0:
+            done = current["checked_criteria"]
+            total = current["total_criteria"]
+            pct = int((done / total) * 100)
+            progress_bar = f" ({done}/{total} criteria - {pct}%)"
+
+        print("\n🟡 ACTIVE TASK:")
+        print(f"  Plan ID:    {current['id']}")
+        print(f"  Title:      {current['title']}")
+        print(f"  Status:     \033[1;33m{current['status'].upper()}\033[0m")
+        print(f"  Stage/Role: 👤 {current['stage'].capitalize()}")
+        print(f"  Progress:  {progress_bar}")
+        print(f"  File:       {current['file'].relative_to(root)}")
+    else:
+        print("\n🟢 ACTIVE TASK: None (All plans completed or no active plan)")
+
+    if completed:
+        print("\n✅ RECENTLY COMPLETED:")
+        for p in completed[-5:]:
+            crit = f" ({p['checked_criteria']}/{p['total_criteria']} criteria)" if p['total_criteria'] else ""
+            print(f"  • [{p['id']}] {p['title']}{crit}")
+
+    print("\n" + "-" * 60)
+
+
+def cmd_list(root: Path):
+    """List all tracked plans."""
+    plans = get_all_plans(root)
+    if not plans:
+        print(f"No plans found in {root / 'ai' / 'plans'}")
+        return
+
+    print(f"{'PLAN ID':<10} {'STATUS':<14} {'STAGE':<12} {'CRITERIA':<10} {'TITLE'}")
+    print("-" * 75)
+    for p in plans:
+        crit = f"{p['checked_criteria']}/{p['total_criteria']}"
+        status_color = "\033[1;32m" if p["status"].upper() in ["COMPLETED", "DONE"] else "\033[1;33m"
+        reset = "\033[0m"
+        status_str = f"{status_color}{p['status'].upper()}{reset}"
+        print(f"{p['id']:<10} {status_str:<23} {p['stage'].capitalize():<12} {crit:<10} {p['title']}")
+
+
+def cmd_show(root: Path, plan_id: str = None):
+    """Display the full content of a plan."""
+    plans = get_all_plans(root)
+    target = None
+    if plan_id:
+        for p in plans:
+            if p["id"].lower() == plan_id.lower() or plan_id.lower() in p["title"].lower():
+                target = p
+                break
+    else:
+        active = [p for p in plans if p["status"].upper() not in ["COMPLETED", "DONE", "ARCHIVED"]]
+        target = active[0] if active else (plans[-1] if plans else None)
+
+    if not target:
+        print(f"Plan '{plan_id}' not found.")
+        return
+
+    print(f"\n--- {target['file'].name} ---")
+    print(target["file"].read_text(encoding="utf-8"))
+
+
+def cmd_init(root: Path):
+    """Initialize the town multi-agent tracking structure in any directory."""
+    ai_dir = root / "ai"
+    plans_dir = ai_dir / "plans"
+    bulletin = ai_dir / "bulletin.md"
+    ledger = ai_dir / "ledger.md"
+    todo = ai_dir / "todo.md"
+
+    plans_dir.mkdir(parents=True, exist_ok=True)
+
+    if not bulletin.exists():
+        bulletin.write_text(
+            "# 🏛️ Town Hall Bulletin Board\n\n"
+            "> *Shared communication scratchpad for townspeople subagents.*\n\n"
+            "---\n\n## Current Assignment\n- **Status:** Idle\n",
+            encoding="utf-8",
+        )
+
+    if not ledger.exists():
+        ledger.write_text(
+            f"# 🏛️ Town Work Ledger | {root.name}\n\n"
+            "### Active Task\n* **Status:** Idle\n\n---\n\n"
+            "### Plan History\n| Plan ID | Title | Stage | Status |\n| :--- | :--- | :--- | :--- |\n",
+            encoding="utf-8",
+        )
+
+    if not todo.exists():
+        todo.write_text(
+            f"# Tasks for {root.name}\n\n- [ ] Initial project setup\n",
+            encoding="utf-8",
+        )
+
+    print(f"✅ Initialized portable Town tracking structure in {root}")
+    print("   Created: ai/plans/, ai/bulletin.md, ai/ledger.md, ai/todo.md")
+
+
+def cmd_sync_ledger(root: Path):
+    """Regenerate ai/ledger.md from the plans in ai/plans/."""
+    plans = get_all_plans(root)
+    ledger_file = root / "ai" / "ledger.md"
+    active = [p for p in plans if p["status"].upper() not in ["COMPLETED", "DONE", "ARCHIVED"]]
+
+    lines = [
+        f"# 🏛️ Town Work Ledger | {root.name}\n",
+        f"*Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n",
+        "## Active Task\n",
+    ]
+
+    if active:
+        c = active[0]
+        crit = f" ({c['checked_criteria']}/{c['total_criteria']} criteria met)" if c['total_criteria'] else ""
+        lines.append(f"* **Plan ID:** `{c['id']}`")
+        lines.append(f"* **Title:** {c['title']}")
+        lines.append(f"* **Stage / Role:** 👤 {c['stage'].capitalize()}")
+        lines.append(f"* **Status:** 🟡 `{c['status'].upper()}`{crit}")
+        lines.append(f"* **File:** [`ai/plans/{c['file'].name}`](file://{c['file'].resolve()})")
+    else:
+        lines.append("🟢 **Status:** Idle (No active tasks)\n")
+
+    lines.append("\n---\n\n## All Tracked Plans\n")
+    lines.append("| Plan ID | Title | Stage | Status | Criteria | Plan File |")
+    lines.append("| :--- | :--- | :--- | :--- | :---: | :--- |")
+
+    for p in plans:
+        badge = "✅" if p["status"].upper() in ["COMPLETED", "DONE"] else "🟡"
+        crit = f"{p['checked_criteria']}/{p['total_criteria']}"
+        lines.append(
+            f"| **{p['id']}** | {p['title']} | {p['stage'].capitalize()} | {badge} `{p['status'].upper()}` | {crit} | [{p['file'].name}](file://{p['file'].resolve()}) |"
+        )
+
+    ledger_file.parent.mkdir(parents=True, exist_ok=True)
+    ledger_file.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"✅ Synchronized {ledger_file}")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="town",
+        description="Portable task and multi-agent plan tracker across workspaces.",
+    )
+    subparsers = parser.add_subparsers(dest="command")
+
+    subparsers.add_parser("status", help="Show current project work status (default)")
+    subparsers.add_parser("list", help="List all plans in the current project")
+
+    show_parser = subparsers.add_parser("show", help="Show details of a plan")
+    show_parser.add_argument("plan_id", nargs="?", help="Plan ID to show (default: active plan)")
+
+    subparsers.add_parser("init", help="Initialize town tracking structure in current directory")
+    subparsers.add_parser("sync", help="Sync and regenerate ai/ledger.md from ai/plans/")
+
+    args = parser.parse_args()
+    root = find_project_root()
+
+    if args.command in [None, "status"]:
+        cmd_status(root)
+    elif args.command == "list":
+        cmd_list(root)
+    elif args.command == "show":
+        cmd_show(root, args.plan_id)
+    elif args.command == "init":
+        cmd_init(Path.cwd())
+    elif args.command == "sync":
+        cmd_sync_ledger(root)
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()

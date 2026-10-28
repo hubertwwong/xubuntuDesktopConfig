@@ -34,3 +34,9 @@
     src: "{{ playbook_dir }}/../../dotfiles/gemini/agents/"
     dest: "{{ ansible_env.HOME }}/.gemini/config/agents/"
     mode: '0644'
+
+- name: Antigravity - Deploy portable town CLI tracking tool
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../../dotfiles/town"
+    dest: "{{ ansible_env.HOME }}/.local/bin/town"
+    mode: '0755'
