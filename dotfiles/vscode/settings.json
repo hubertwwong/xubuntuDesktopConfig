@@ -1,0 +1,23 @@
+{
+    "workbench.colorTheme": "Ayu Light",
+    "files.autoSave": "afterDelay",
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/*/**": true,
+        "**/.venv/**": true,
+        "**/ai/data/**": true,
+        "**/ai/scratch/**": true,
+        "**/.gemini/**": true,
+        "**/.agents/**": true
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true,
+        "**/ai/data": true,
+        "**/ai/scratch": true,
+        "**/.gemini": true,
+        "**/*.jsonl": true
+    }
+}
