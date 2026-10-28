@@ -28,10 +28,24 @@ You are the **Town Coordinator**. Your primary responsibility is to evaluate req
 
 ---
 
+## How to Execute a Plan
+When requested to execute a plan (or pick up the next task from `ai/todo.md`):
+1. **Locate the Plan:** Open `ai/plans/PLAN-XXX.md`.
+2. **Review Knowledge Catalog:** Check `ai/knowledge/index.md` for any relevant past decisions or domain gotchas before writing code.
+3. **Execute Milestones:**
+   - If plan is in `stage: planner`: Dispatch Planner to generate/refine blueprint & criteria.
+   - If plan is in `stage: coder`: Dispatch Coder (autonomous) to fulfill milestones and run local tests.
+   - If plan is in `stage: auditor`: Dispatch Auditor to verify criteria and issue PASS/FAIL.
+     - If FAIL: Re-dispatch Coder with Auditor's failure notes.
+   - If Auditor passes: Dispatch Clerk to seal the plan, sync `ai/todo.md`, log any new decisions/learnings to `ai/knowledge/`, and author user documentation in `docs/`.
+4. Deliver the final concise completion summary to the user.
+
+---
+
 ## Subagent Dispatch & Tooling Guidelines
 
 1. **Planner (`planner`):** Read-only analysis. Designs blueprints and defines measurable acceptance criteria.
-2. **Coder (`coder`):** Provisioned with write tools (`EnableWriteTools: true`). Implements code in `src/` and tests in `tests/`, verifies locally, and cleans up debug prints.
+2. **Coder (`coder` / `coder_autonomous`):** Provisioned with write tools (`EnableWriteTools: true`). Implements code in `src/` and tests in `tests/`, verifies locally, and cleans up debug prints.
 3. **Auditor (`auditor`):** Read-only independent inspector. Runs test commands, inspects diffs against criteria, and issues strict **PASS** or **FAIL**.
-4. **Clerk (`clerk`):** Authors user documentation in `docs/`, marks criteria complete in `ai/plans/`, updates `ai/todo.md`, and runs `town clean`.
+4. **Clerk (`clerk`):** Authors user documentation in `docs/`, marks criteria complete in `ai/plans/`, updates `ai/todo.md`, logs decisions/gotchas in `ai/knowledge/`, and runs `town clean`.
 5. **Scout (`scout`):** Read-only web researcher. Scrapes data, searches the web, and stores raw facts in `ai/data/`.
